@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Ingredient;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class IngredientRepository
 {
@@ -12,6 +13,20 @@ class IngredientRepository
         return Ingredient::where('company_id', $companyId)
             ->orderBy('name')
             ->get();
+    }
+
+    public function getPaginatedByCompany(int $companyId, ?string $search = null, ?int $perPage = null): LengthAwarePaginator
+    {
+        $perPage ??= (int) config('precificafacil.pagination.per_page', 10);
+
+        return Ingredient::where('company_id', $companyId)
+            ->when($search, fn ($query) => $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('name', 'like', "%{$search}%")
+                    ->orWhere('brand', 'like', "%{$search}%");
+            }))
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function findById(int $id, int $companyId): ?Ingredient

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Estrutura do catálogo</p>
-            <h2 class="page-title">Categorias organizadas para facilitar o cadastro.</h2>
+            <!-- <h2 class="page-title">Categorias organizadas para facilitar o cadastro.</h2> -->
             <p class="page-subtitle">Use categorias para agrupar produtos e deixar a operação mais legível para o dia a dia.</p>
         </div>
 
@@ -22,7 +22,18 @@
                     <h3 class="table-title">Categorias da empresa</h3>
                     <p class="table-description">Estrutura simples para manter o catálogo de produtos limpo e consistente.</p>
                 </div>
-                <span class="badge-neutral">{{ $categories->count() }} registro(s)</span>
+                <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+                    <form method="GET" action="{{ route('categories.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar categoria" class="block w-full sm:w-64">
+                        <div class="flex items-center gap-2">
+                            <button type="submit" class="button-secondary">Buscar</button>
+                            @if ($search !== '')
+                                <a href="{{ route('categories.index') }}" class="button-secondary">Limpar</a>
+                            @endif
+                        </div>
+                    </form>
+                    <span class="badge-neutral">{{ $categories->total() }} registro(s)</span>
+                </div>
             </div>
 
             @if ($categories->isEmpty())
@@ -59,6 +70,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="border-t px-6 py-4" style="border-color: var(--pf-border);">
+                    {{ $categories->links() }}
                 </div>
             @endif
         </section>

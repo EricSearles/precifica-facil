@@ -88,8 +88,10 @@
                                 </div>
                                 <div class="text-sm text-slate-600">
                                     <p class="font-semibold text-slate-900">Custo calculado</p>
-                                    <p class="mt-2">Unitário: @money((float) $productPackaging->packaging?->unit_cost, $product->company)</p>
-                                    <p>Total: @money((float) $productPackaging->total_cost, $product->company)</p>
+                                    <div class="detail-stack">
+                                        <p class="detail-line"><span class="detail-label">Unitário:</span><span class="detail-value">@money((float) $productPackaging->packaging?->unit_cost, $product->company)</span></p>
+                                        <p class="detail-line"><span class="detail-label">Total:</span><span class="detail-value">@money((float) $productPackaging->total_cost, $product->company)</span></p>
+                                    </div>
                                 </div>
                                 <div class="flex items-end justify-end gap-2">
                                     <button type="submit" class="button-secondary">Salvar</button>
@@ -189,14 +191,18 @@
 
                                     <div class="text-sm text-slate-600">
                                         <p class="font-semibold text-slate-900">Taxas</p>
-                                        <p class="mt-2">Percentual: {{ number_format((float) $percentageRate, 2, ',', '.') }}%</p>
-                                        <p>Fixa: @money((float) $productChannelPrice->fixed_fee_total, $product->company)</p>
+                                        <div class="detail-stack">
+                                            <p class="detail-line"><span class="detail-label">Percentual:</span><span class="detail-value">{{ number_format((float) $percentageRate, 2, ',', '.') }}%</span></p>
+                                            <p class="detail-line"><span class="detail-label">Fixa:</span><span class="detail-value">@money((float) $productChannelPrice->fixed_fee_total, $product->company)</span></p>
+                                        </div>
                                     </div>
 
                                     <div class="text-sm text-slate-600">
                                         <p class="font-semibold text-slate-900">Preço calculado</p>
-                                        <p class="mt-2">Canal: @money((float) $productChannelPrice->channel_price, $product->company)</p>
-                                        <p>Líquido: @money((float) $productChannelPrice->net_value, $product->company)</p>
+                                        <div class="detail-stack">
+                                            <p class="detail-line"><span class="detail-label">Canal:</span><span class="detail-value">@money((float) $productChannelPrice->channel_price, $product->company)</span></p>
+                                            <p class="detail-line"><span class="detail-label">Líquido:</span><span class="detail-value">@money((float) $productChannelPrice->net_value, $product->company)</span></p>
+                                        </div>
                                     </div>
 
                                     <div class="flex items-end justify-end gap-2">
@@ -205,7 +211,7 @@
                                 </form>
 
                                 <div class="mt-4 flex items-center justify-between border-t border-slate-200 pt-4 text-sm text-slate-500">
-                                    <span>Referência base: @money((float) $productChannelPrice->reference_price, $product->company)</span>
+                                    <span class="detail-line"><span class="detail-label">Referência base:</span><span class="detail-value">@money((float) $productChannelPrice->reference_price, $product->company)</span></span>
                                     <form method="POST" action="{{ route('product-channel-prices.destroy', $productChannelPrice->id) }}" onsubmit="return confirm('Deseja remover este preço do canal?');">
                                         @csrf
                                         @method('DELETE')

@@ -1,16 +1,16 @@
-# Precifica Facil
+# Precifica Fácil
 
-SaaS em Laravel para precificacao de produtos alimenticios, focado em doceiras, confeiteiras, salgadeiras, marmiteiras e pequenos negocios de alimentacao.
+SaaS em Laravel para precificação de produtos alimenticios, focado em doceiras, confeiteiras, salgadeiras, marmiteiras e pequenos negocios de alimentacao.
 
 ## Visao geral
 
-O Precifica Facil organiza a estrutura de custo e venda do produto em um fluxo pratico:
+O Precifica Fácil organiza a estrutura de custo e venda do produto em um fluxo pratico:
 
 - cadastro de categorias, ingredientes, embalagens e produtos
 - montagem de receitas com itens, custos extras e embalagem
-- calculo de custo total, custo unitario e preco sugerido
+- calculo de custo total, custo unitario e preço sugerido
 - configuracao de canais de venda com taxas fixas e percentuais
-- calculo e persistencia de preco especifico por produto/canal
+- calculo e persistencia de preço especifico por produto/canal
 - configuracoes globais da empresa, como margem padrao e casas decimais
 
 ## Stack
@@ -43,7 +43,7 @@ Essa estrutura foi mantida em todos os modulos principais do sistema.
 - custos extras
 - canais de venda
 - taxas por canal
-- precos por produto/canal
+- preços por produto/canal
 
 ## Canais de venda
 
@@ -55,7 +55,7 @@ Cada canal pode ter:
 - taxas fixas
 - status ativo/inativo
 
-Com isso, o sistema calcula o preco final do canal a partir do valor liquido desejado para o produto.
+Com isso, o sistema calcula o preço final do canal a partir do valor liquido desejado para o produto.
 
 Exemplos:
 
@@ -96,7 +96,7 @@ npm run build
 php artisan serve
 ```
 
-No Windows PowerShell, se `cp` nao funcionar como esperado, use:
+No Windows PowerShell, se `cp` não funcionar como esperado, use:
 
 ```powershell
 Copy-Item .env.example .env
@@ -149,36 +149,36 @@ Depois do login, os principais modulos ficam disponiveis em:
 - `/recipes`
 - `/settings`
 
-## Calculo de precificacao
+## Calculo de precificação
 
 O fluxo base do calculo hoje considera:
 
-- custo unitario dos ingredientes
+- custo unitário dos ingredientes
 - custo dos itens da receita
 - custos extras fixos e percentuais
 - custo de embalagem
 - margem do produto ou margem global da empresa
-- precos especificos por canal de venda
+- preços específicos por canal de venda
 
 ## Publicacao no Git
 
 Antes de subir para o repositorio remoto:
 
-- confirme que o `.env` nao esta versionado
-- confirme que `vendor/`, `node_modules/`, `public/build/` e `storage/` nao estao entrando no commit
+- confirme que o `.env` não esta versionado
+- confirme que `vendor/`, `node_modules/`, `public/build/` e `storage/` não estão entrando no commit
 - rode `php artisan optimize:clear` se quiser limpar cache local antes do push
 
 ## Status atual
 
-O projeto ja possui base funcional para uso interno e demonstracao do fluxo principal de precificacao.
+O projeto já possui base funcional para uso interno e demonstração do fluxo principal de precificação.
 
-Passos recomendados de evolucao:
+Passos recomendados de evolução:
 
 - testes de feature para os fluxos principais
 - refinamento visual das telas restantes
-- dashboards com metricas financeiras e operacionais
-- exportacao e relatorios
-- multiusuarios com permissoes mais detalhadas
+- dashboards com métricas financeiras e operacionais
+- exportação e relatórios
+- multiusuarios com permissões mais detalhadas
 
 ## Licenca
 

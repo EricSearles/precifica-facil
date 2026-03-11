@@ -38,6 +38,7 @@ class CompanyRegistrationService
                 'company_id' => $company->id,
                 'role' => 'owner',
                 'is_owner' => true,
+                'terms_accepted_at' => now(),
             ]);
 
             $this->settingRepository->create([

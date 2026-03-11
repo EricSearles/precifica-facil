@@ -14,10 +14,14 @@ class ExtraCost extends Model
         'description',
         'type',
         'value',
+        'labor_minutes',
+        'labor_hourly_rate',
     ];
 
     protected $casts = [
         'value' => 'decimal:2',
+        'labor_minutes' => 'integer',
+        'labor_hourly_rate' => 'decimal:2',
     ];
 
     public function company(): BelongsTo

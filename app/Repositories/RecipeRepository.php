@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Recipe;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class RecipeRepository
 {
@@ -13,6 +14,21 @@ class RecipeRepository
             ->where('company_id', $companyId)
             ->orderBy('name')
             ->get();
+    }
+
+    public function getPaginatedByCompany(int $companyId, ?string $search = null, ?int $perPage = null): LengthAwarePaginator
+    {
+        $perPage ??= (int) config('precificafacil.pagination.per_page', 10);
+
+        return Recipe::with(['company.setting', 'product.productChannelPrices.salesChannel', 'product'])
+            ->where('company_id', $companyId)
+            ->when($search, fn ($query) => $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('product', fn ($productQuery) => $productQuery->where('name', 'like', "%{$search}%"));
+            }))
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByProduct(int $productId, int $companyId): Collection

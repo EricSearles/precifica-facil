@@ -20,10 +20,12 @@ class PackagingController extends Controller
 
     public function index(Request $request): View
     {
-        $packagings = $this->packagingRepository->getByCompany((int) $request->user()->company_id);
+        $search = trim((string) $request->query('search', ''));
+        $packagings = $this->packagingRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
 
         return view('packagings.index', [
             'packagings' => $packagings,
+            'search' => $search,
         ]);
     }
 

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Custos de acondicionamento</p>
-            <h2 class="page-title">Embalagens com custo unitário controlado.</h2>
+            <!-- <h2 class="page-title">Embalagens com custo unitário controlado.</h2> -->
             <p class="page-subtitle">Mantenha os materiais de venda organizados para refletir o custo real do produto no cálculo final.</p>
         </div>
 
@@ -22,7 +22,18 @@
                     <h3 class="table-title">Cadastro de embalagens</h3>
                     <p class="table-description">Use este catálogo como base para compor o custo de embalagem por produto.</p>
                 </div>
-                <span class="badge-neutral">{{ $packagings->count() }} registro(s)</span>
+                <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+                    <form method="GET" action="{{ route('packagings.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar embalagem" class="block w-full sm:w-64">
+                        <div class="flex items-center gap-2">
+                            <button type="submit" class="button-secondary">Buscar</button>
+                            @if ($search !== '')
+                                <a href="{{ route('packagings.index') }}" class="button-secondary">Limpar</a>
+                            @endif
+                        </div>
+                    </form>
+                    <span class="badge-neutral">{{ $packagings->total() }} registro(s)</span>
+                </div>
             </div>
 
             @if ($packagings->isEmpty())
@@ -44,7 +55,7 @@
                             @foreach ($packagings as $packaging)
                                 <tr>
                                     <td class="entity-title">{{ $packaging->name }}</td>
-                                    <td class="font-semibold text-slate-900">R$ {{ number_format((float) $packaging->unit_cost, 2, ',', '.') }}</td>
+                                    <td class="font-semibold text-slate-900">@money((float) $packaging->unit_cost, $packaging->company)</td>
                                     <td class="table-actions-cell">
                                         <div class="table-actions-wrap">
                                             <a href="{{ route('packagings.edit', $packaging->id) }}" class="button-table-action">Editar</a>
@@ -59,6 +70,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="border-t px-6 py-4" style="border-color: var(--pf-border);">
+                    {{ $packagings->links() }}
                 </div>
             @endif
         </section>

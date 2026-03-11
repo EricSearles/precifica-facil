@@ -90,7 +90,7 @@
 
     @if ($ingredient)
         <div class="badge-neutral w-fit">
-            Custo unitário atual: R$ {{ number_format((float) $ingredient->unit_cost, 2, ',', '.') }}
+            Custo unitário atual: @money((float) $ingredient->unit_cost, $ingredient->company)
         </div>
     @endif
 

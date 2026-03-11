@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Catálogo comercial</p>
-            <h2 class="page-title">Produtos prontos para precificação e venda.</h2>
+            <!-- <h2 class="page-title">Produtos prontos para precificação e venda.</h2> -->
             <p class="page-subtitle">Acompanhe margem, rendimento, status, preço sugerido e preços por canal em uma visão organizada para decisões rápidas.</p>
         </div>
 
@@ -22,7 +22,18 @@
                     <h3 class="table-title">Cadastro de produtos</h3>
                     <p class="table-description">Produtos com categoria, margem, rendimento, status e canais de venda vinculados.</p>
                 </div>
-                <span class="badge-neutral">{{ $products->count() }} registro(s)</span>
+                <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+                    <form method="GET" action="{{ route('products.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar produto" class="block w-full sm:w-64">
+                        <div class="flex items-center gap-2">
+                            <button type="submit" class="button-secondary">Buscar</button>
+                            @if ($search !== '')
+                                <a href="{{ route('products.index') }}" class="button-secondary">Limpar</a>
+                            @endif
+                        </div>
+                    </form>
+                    <span class="badge-neutral">{{ $products->total() }} registro(s)</span>
+                </div>
             </div>
 
             @if ($products->isEmpty())
@@ -57,12 +68,16 @@
                                         @elseif ($product->profit_margin_type === 'percentage')
                                             {{ number_format((float) $product->profit_margin_value, 2, ',', '.') }}%
                                         @else
-                                            R$ {{ number_format((float) $product->profit_margin_value, 2, ',', '.') }}
+                                            @money((float) $product->profit_margin_value, $product->company)
                                         @endif
                                     </td>
                                     <td>
-                                        <div class="font-semibold text-slate-900">@money((float) $product->suggested_sale_price, $product->company)</div>
-                                        @if ($product->productChannelPrices->isNotEmpty())
+                                        @if ((float) $product->suggested_sale_price > 0)
+                                            <div class="font-semibold text-slate-900">@money((float) $product->suggested_sale_price, $product->company)</div>
+                                        @else
+                                            <div class="font-semibold text-slate-900">A calcular</div>
+                                        @endif
+                                        @if ((float) $product->suggested_sale_price > 0 && $product->productChannelPrices->isNotEmpty())
                                             <div class="channel-price-list">
                                                 @foreach ($product->productChannelPrices->take(3) as $channelPrice)
                                                     <div class="channel-price-item">
@@ -95,6 +110,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="border-t px-6 py-4" style="border-color: var(--pf-border);">
+                    {{ $products->links() }}
                 </div>
             @endif
         </section>

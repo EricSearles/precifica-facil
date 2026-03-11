@@ -25,10 +25,12 @@ class RecipeController extends Controller
 
     public function index(Request $request): View
     {
-        $recipes = $this->recipeRepository->getByCompany((int) $request->user()->company_id);
+        $search = trim((string) $request->query('search', ''));
+        $recipes = $this->recipeRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
 
         return view('recipes.index', [
             'recipes' => $recipes,
+            'search' => $search,
         ]);
     }
 

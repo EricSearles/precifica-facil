@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExtraCostController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\PackagingController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\ProductChannelPriceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPackagingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicCalculatorController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeItemController;
 use App\Http\Controllers\SalesChannelController;
@@ -19,11 +21,20 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/calculadora', [PublicCalculatorController::class, 'show'])->name('calculator.public');
+Route::get('/calculadora/simular', [PublicCalculatorController::class, 'simulate'])->name('calculator.simulate');
+Route::redirect('/calculadora-preco-venda', '/calculadora', 301);
 
-Route::middleware('auth')->group(function () {
+Route::view('/termos-de-uso', 'legal.terms')->name('terms');
+Route::view('/uso-de-dados', 'legal.data-usage')->name('data-usage');
+
+Route::get('/dashboard', [DashboardController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/dashboard/quick-price', [DashboardController::class, 'calculate'])->name('dashboard.quick-price');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

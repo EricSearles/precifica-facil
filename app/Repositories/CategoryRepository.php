@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CategoryRepository
 {
@@ -12,6 +13,17 @@ class CategoryRepository
         return Category::where('company_id', $companyId)
             ->orderBy('name')
             ->get();
+    }
+
+    public function getPaginatedByCompany(int $companyId, ?string $search = null, ?int $perPage = null): LengthAwarePaginator
+    {
+        $perPage ??= (int) config('precificafacil.pagination.per_page', 10);
+
+        return Category::where('company_id', $companyId)
+            ->when($search, fn ($query) => $query->where('name', 'like', "%{$search}%"))
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function findById(int $id, int $companyId): ?Category

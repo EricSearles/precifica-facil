@@ -20,10 +20,12 @@ class CategoryController extends Controller
 
     public function index(Request $request): View
     {
-        $categories = $this->categoryRepository->getByCompany((int) $request->user()->company_id);
+        $search = trim((string) $request->query('search', ''));
+        $categories = $this->categoryRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
 
         return view('categories.index', [
             'categories' => $categories,
+            'search' => $search,
         ]);
     }
 

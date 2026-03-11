@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Base de insumos</p>
-            <h2 class="page-title">Ingredientes com custo claro e prontos para composição.</h2>
+            <!-- <h2 class="page-title">Ingredientes com custo claro e prontos para composição.</h2> -->
             <p class="page-subtitle">Cadastre preço, unidade de compra e unidade base para formar receitas com rapidez e menos erro operacional.</p>
         </div>
 
@@ -22,7 +22,18 @@
                     <h3 class="table-title">Ingredientes cadastrados</h3>
                     <p class="table-description">Visão rápida do custo unitário e das informações de compra usadas na ficha técnica.</p>
                 </div>
-                <span class="badge-neutral">{{ $ingredients->count() }} registro(s)</span>
+                <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+                    <form method="GET" action="{{ route('ingredients.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar ingrediente" class="block w-full sm:w-64">
+                        <div class="flex items-center gap-2">
+                            <button type="submit" class="button-secondary">Buscar</button>
+                            @if ($search !== '')
+                                <a href="{{ route('ingredients.index') }}" class="button-secondary">Limpar</a>
+                            @endif
+                        </div>
+                    </form>
+                    <span class="badge-neutral">{{ $ingredients->total() }} registro(s)</span>
+                </div>
             </div>
 
             @if ($ingredients->isEmpty())
@@ -52,12 +63,12 @@
                                     </td>
                                     <td>
                                         {{ $ingredient->purchase_quantity }} {{ strtoupper($ingredient->purchase_unit) }}<br>
-                                        <span class="entity-meta">R$ {{ number_format((float) $ingredient->purchase_price, 2, ',', '.') }}</span>
+                                        <span class="entity-meta">@money((float) $ingredient->purchase_price, $ingredient->company)</span>
                                     </td>
                                     <td>
                                         {{ $ingredient->base_quantity ?: '-' }} {{ strtoupper($ingredient->base_unit ?: '') }}
                                     </td>
-                                    <td class="font-semibold text-slate-900">R$ {{ number_format((float) $ingredient->unit_cost, 2, ',', '.') }}</td>
+                                    <td class="font-semibold text-slate-900">@money((float) $ingredient->unit_cost, $ingredient->company)</td>
                                     <td>
                                         <span class="{{ $ingredient->is_active ? 'badge-success' : 'badge-neutral' }}">{{ $ingredient->is_active ? 'Ativo' : 'Inativo' }}</span>
                                     </td>
@@ -75,6 +86,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="border-t px-6 py-4" style="border-color: var(--pf-border);">
+                    {{ $ingredients->links() }}
                 </div>
             @endif
         </section>
