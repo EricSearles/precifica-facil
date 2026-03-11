@@ -25,6 +25,11 @@
 
                     <div class="topbar-meta">
                         <span class="topbar-chip">Painel de gestao e formacao de preços</span>
+                        @if (Auth::user()->company?->onTrial())
+                        <span class="topbar-chip">{{ Auth::user()->company->trialDaysLeft() }} dia(s) restantes no teste</span>
+                        @elseif (Auth::user()->company?->trialExpired())
+                        <span class="topbar-chip">Periodo de teste encerrado</span>
+                        @endif
                         <!-- <span class="hidden md:inline">Painel de gestao e formacao de preços</span> -->
                     </div>
                 </div>
