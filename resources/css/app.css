@@ -1,0 +1,343 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --pf-bg: #f4f7f2;
+        --pf-surface: rgba(255, 255, 255, 0.92);
+        --pf-surface-strong: #ffffff;
+        --pf-border: rgba(148, 163, 184, 0.22);
+        --pf-border-strong: rgba(100, 116, 139, 0.22);
+        --pf-text: #112031;
+        --pf-text-soft: #516173;
+        --pf-title: #0f172a;
+        --pf-accent: #0f766e;
+        --pf-accent-soft: #d6f3ec;
+        --pf-accent-strong: #115e59;
+        --pf-warm: #e7f5d7;
+        --pf-shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        @apply h-full scroll-smooth;
+    }
+
+    body {
+        @apply min-h-full antialiased text-slate-900;
+        font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+        background:
+            radial-gradient(circle at top left, rgba(15, 118, 110, 0.10), transparent 26%),
+            radial-gradient(circle at bottom right, rgba(190, 242, 100, 0.14), transparent 22%),
+            linear-gradient(180deg, #f8fbf7 0%, #f3f6f1 100%);
+        color: var(--pf-text);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--pf-title);
+        letter-spacing: -0.02em;
+    }
+
+    select,
+    textarea {
+        @apply rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition duration-200 ease-out;
+        border-color: var(--pf-border-strong);
+    }
+
+    select:focus,
+    textarea:focus {
+        @apply border-transparent outline-none ring-2 ring-teal-500/30;
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.10);
+    }
+}
+
+@layer components {
+    .app-shell {
+        @apply relative min-h-screen lg:flex;
+    }
+
+    .mobile-sidebar-shell {
+        @apply fixed inset-y-0 left-0 z-50 w-[296px] border-r px-5 py-5 transition-transform duration-300 ease-out lg:hidden;
+        background: linear-gradient(180deg, rgba(9, 19, 35, 0.96) 0%, rgba(15, 23, 42, 0.94) 100%);
+        border-color: rgba(148, 163, 184, 0.12);
+        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.16);
+    }
+
+    .desktop-sidebar-shell {
+        @apply hidden w-[296px] shrink-0 border-r px-5 py-5 lg:block;
+        background: linear-gradient(180deg, rgba(9, 19, 35, 0.96) 0%, rgba(15, 23, 42, 0.94) 100%);
+        border-color: rgba(148, 163, 184, 0.12);
+        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.16);
+    }
+
+    .sidebar-panel {
+        @apply flex h-full flex-col rounded-[28px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl;
+    }
+
+    .brand-mark {
+        @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg;
+        background: linear-gradient(135deg, #14b8a6 0%, #84cc16 100%);
+    }
+
+    .brand-badge {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-100/90;
+        background: rgba(20, 184, 166, 0.14);
+    }
+
+    .sidebar-section-label {
+        @apply px-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400;
+    }
+
+    .sidebar-link {
+        @apply flex items-center justify-between rounded-2xl px-3 py-3 text-sm font-medium text-slate-300 transition duration-200 ease-out;
+    }
+
+    .sidebar-link:hover {
+        @apply text-white;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar-link-active {
+        @apply text-white shadow-sm;
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.22) 0%, rgba(132, 204, 22, 0.18) 100%);
+    }
+
+    .sidebar-pill {
+        @apply inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-teal-100;
+        background: rgba(20, 184, 166, 0.18);
+    }
+
+    .content-shell {
+        @apply min-w-0 flex-1;
+    }
+
+    .topbar-shell {
+        @apply sticky top-0 z-30 flex items-center justify-between gap-4 border-b px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-10;
+        background: rgba(244, 247, 242, 0.86);
+        border-color: rgba(148, 163, 184, 0.16);
+    }
+
+    .topbar-meta {
+        @apply flex items-center gap-3 text-sm text-slate-500;
+    }
+
+    .topbar-chip {
+        @apply inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold text-slate-600;
+        background: rgba(255, 255, 255, 0.76);
+        border-color: var(--pf-border-strong);
+    }
+
+    .topbar-action {
+        @apply inline-flex items-center gap-2 rounded-2xl border bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 ease-out hover:bg-white;
+        border-color: var(--pf-border-strong);
+    }
+
+    .page-shell {
+        @apply px-4 py-6 sm:px-6 lg:px-10 lg:py-8;
+    }
+
+    .page-header {
+        @apply mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between;
+    }
+
+    .page-kicker {
+        @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-teal-700;
+    }
+
+    .page-title {
+        @apply text-3xl font-semibold leading-tight text-slate-950 sm:text-[2rem];
+    }
+
+    .page-subtitle {
+        @apply mt-2 max-w-3xl text-sm leading-6 text-slate-500;
+    }
+
+    .page-actions {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .surface-card {
+        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)] backdrop-blur-xl;
+        background: var(--pf-surface);
+        border-color: var(--pf-border);
+    }
+
+    .surface-card-strong {
+        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)];
+        background: var(--pf-surface-strong);
+        border-color: var(--pf-border);
+    }
+
+    .metric-card {
+        @apply rounded-[24px] border p-5;
+        background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.94) 100%);
+        border-color: var(--pf-border);
+    }
+
+    .metric-label {
+        @apply text-xs font-semibold uppercase tracking-[0.22em] text-slate-400;
+    }
+
+    .metric-value {
+        @apply mt-3 text-3xl font-semibold text-slate-950;
+    }
+
+    .metric-caption {
+        @apply mt-2 text-sm text-slate-500;
+    }
+
+    .table-shell {
+        @apply overflow-hidden rounded-[28px] border shadow-[var(--pf-shadow)];
+        background: var(--pf-surface);
+        border-color: var(--pf-border);
+    }
+
+    .table-toolbar {
+        @apply flex flex-col gap-3 border-b px-6 py-5 lg:flex-row lg:items-center lg:justify-between;
+        border-color: rgba(148, 163, 184, 0.14);
+    }
+
+    .table-title {
+        @apply text-lg font-semibold text-slate-900;
+    }
+
+    .table-description {
+        @apply mt-1 text-sm text-slate-500;
+    }
+
+    .data-table {
+        @apply min-w-full text-sm;
+    }
+
+    .data-table thead th {
+        @apply px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400;
+    }
+
+    .data-table tbody td {
+        @apply px-6 py-5 align-top text-slate-600;
+        border-top: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .data-table tbody tr:hover {
+        background: rgba(248, 250, 252, 0.82);
+    }
+
+    .table-actions-head {
+        @apply text-center;
+    }
+
+    .table-actions-cell {
+        @apply align-middle;
+    }
+
+    .table-actions-wrap {
+        @apply flex justify-center gap-2;
+    }
+
+    .button-table-action {
+        @apply inline-flex items-center justify-center rounded-xl border bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition duration-200 ease-out hover:bg-slate-50;
+        border-color: var(--pf-border-strong);
+    }
+
+    .channel-price-list {
+        @apply mt-2 space-y-1.5;
+    }
+
+    .channel-price-item {
+        @apply flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600;
+    }
+
+    .channel-price-name {
+        @apply font-medium text-slate-500;
+    }
+
+    .channel-price-value {
+        @apply font-semibold text-slate-900;
+    }
+
+    .entity-title {
+        @apply font-semibold text-slate-900;
+    }
+
+    .entity-meta {
+        @apply mt-1 text-xs text-slate-500;
+    }
+
+    .form-grid {
+        @apply grid gap-6;
+    }
+
+    .form-section {
+        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)];
+        background: var(--pf-surface);
+        border-color: var(--pf-border);
+    }
+
+    .form-section-title {
+        @apply text-lg font-semibold text-slate-900;
+    }
+
+    .form-section-subtitle {
+        @apply mt-1 text-sm text-slate-500;
+    }
+
+    .field-grid-2 {
+        @apply grid gap-6 md:grid-cols-2;
+    }
+
+    .field-grid-3 {
+        @apply grid gap-6 md:grid-cols-3;
+    }
+
+    .button-primary {
+        @apply inline-flex items-center justify-center rounded-2xl border px-4 py-2.5 text-sm font-semibold shadow-sm transition duration-200 ease-out hover:-translate-y-0.5;
+        background: linear-gradient(135deg, rgba(15, 118, 110, 0.10) 0%, rgba(132, 204, 22, 0.10) 100%);
+        border-color: rgba(15, 118, 110, 0.16);
+        color: var(--pf-accent-strong);
+    }
+
+    .button-secondary {
+        @apply inline-flex items-center justify-center rounded-2xl border bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 ease-out hover:bg-slate-50 hover:-translate-y-0.5;
+        border-color: var(--pf-border-strong);
+    }
+
+    .button-ghost {
+        @apply inline-flex items-center justify-center rounded-2xl px-3 py-2 text-sm font-medium text-slate-500 transition duration-200 ease-out hover:bg-white/70 hover:text-slate-800;
+    }
+
+    .flash-success {
+        @apply rounded-2xl border px-4 py-3 text-sm font-medium;
+        background: rgba(22, 163, 74, 0.08);
+        color: #166534;
+        border-color: rgba(34, 197, 94, 0.14);
+    }
+
+    .flash-error {
+        @apply rounded-2xl border px-4 py-3 text-sm font-medium;
+        background: rgba(239, 68, 68, 0.08);
+        color: #991b1b;
+        border-color: rgba(239, 68, 68, 0.14);
+    }
+
+    .badge-neutral {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+        background: rgba(148, 163, 184, 0.14);
+        color: #475569;
+    }
+
+    .badge-success {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+        background: rgba(34, 197, 94, 0.12);
+        color: #166534;
+    }
+
+    .empty-state {
+        @apply rounded-[24px] border border-dashed px-6 py-10 text-center;
+        border-color: rgba(148, 163, 184, 0.2);
+        background: rgba(255, 255, 255, 0.66);
+    }
+}
