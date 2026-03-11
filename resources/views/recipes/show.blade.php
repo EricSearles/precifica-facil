@@ -1,27 +1,18 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between gap-4">
+        <div class="page-header !mb-0">
             <div>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ $recipe->name }}
-                </h2>
-                <p class="mt-1 text-sm text-gray-500">
-                    Produto: {{ $recipe->product?->name ?? 'Sem produto vinculado' }}
-                </p>
+                <p class="page-kicker">Ficha tecnica</p>
+                <h2 class="page-title">{{ $recipe->name }}</h2>
+                <p class="page-subtitle">Produto vinculado: {{ $recipe->product?->name ?? 'Sem produto vinculado' }}</p>
             </div>
 
-            <div class="flex items-center gap-3">
-                <a href="{{ route('recipes.index') }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    Voltar
-                </a>
-                <a href="{{ route('recipes.edit', $recipe->id) }}" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    Editar receita
-                </a>
+            <div class="page-actions">
+                <a href="{{ route('recipes.index') }}" class="button-secondary">Voltar</a>
+                <a href="{{ route('recipes.edit', $recipe->id) }}" class="button-secondary">Editar receita</a>
                 <form method="POST" action="{{ route('recipes.recalculate', $recipe->id) }}">
                     @csrf
-                    <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50">
-                        Recalcular receita
-                    </button>
+                    <button type="submit" class="button-primary">Recalcular receita</button>
                 </form>
             </div>
         </div>
@@ -31,36 +22,32 @@
         $units = ['un', 'g', 'kg', 'ml', 'l'];
     @endphp
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="page-shell">
+        <div class="mx-auto max-w-7xl space-y-6">
             @if (session('success'))
-                <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                    {{ session('success') }}
-                </div>
+                <div class="flash-success">{{ session('success') }}</div>
             @endif
 
             @if (session('error'))
-                <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                    {{ session('error') }}
-                </div>
+                <div class="flash-error">{{ session('error') }}</div>
             @endif
 
             <div class="grid gap-6 lg:grid-cols-4">
-                <div class="rounded-lg bg-white p-5 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Custo ingredientes</p>
-                    <p class="mt-2 text-2xl font-semibold text-gray-900">R$ {{ number_format((float) $recipe->ingredients_cost_total, 2, ',', '.') }}</p>
+                <div class="metric-card">
+                    <p class="metric-label">Custo ingredientes</p>
+                    <p class="metric-value">@money((float) $recipe->ingredients_cost_total, $recipe->company)</p>
                 </div>
-                <div class="rounded-lg bg-white p-5 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Custos extras</p>
-                    <p class="mt-2 text-2xl font-semibold text-gray-900">R$ {{ number_format((float) $recipe->extra_cost_total, 2, ',', '.') }}</p>
+                <div class="metric-card">
+                    <p class="metric-label">Custos extras</p>
+                    <p class="metric-value">@money((float) $recipe->extra_cost_total, $recipe->company)</p>
                 </div>
-                <div class="rounded-lg bg-white p-5 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Custo total</p>
-                    <p class="mt-2 text-2xl font-semibold text-gray-900">R$ {{ number_format((float) $recipe->recipe_total_cost, 2, ',', '.') }}</p>
+                <div class="metric-card">
+                    <p class="metric-label">Custo total</p>
+                    <p class="metric-value">@money((float) $recipe->recipe_total_cost, $recipe->company)</p>
                 </div>
-                <div class="rounded-lg bg-white p-5 shadow-sm sm:rounded-lg">
-                    <p class="text-sm text-gray-500">Preco sugerido</p>
-                    <p class="mt-2 text-2xl font-semibold text-gray-900">R$ {{ number_format((float) $recipe->suggested_sale_price, 2, ',', '.') }}</p>
+                <div class="metric-card">
+                    <p class="metric-label">Preco sugerido</p>
+                    <p class="metric-value">@money((float) $recipe->suggested_sale_price, $recipe->company)</p>
                     @if ($recipe->product?->productChannelPrices?->isNotEmpty())
                         <div class="channel-price-list">
                             @foreach ($recipe->product->productChannelPrices->take(3) as $channelPrice)
@@ -75,68 +62,62 @@
             </div>
 
             <div class="grid gap-6 lg:grid-cols-3">
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="rounded-lg bg-white shadow-sm sm:rounded-lg">
-                        <div class="border-b border-gray-100 px-6 py-4">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Adicionar ingrediente</h3>
+                <div class="space-y-6 lg:col-span-2">
+                    <div class="form-section">
+                        <div class="border-b pb-4" style="border-color: var(--pf-border);">
+                            <h3 class="form-section-title">Adicionar ingrediente</h3>
+                            <p class="form-section-subtitle">Inclua os insumos que compoem a receita e mantenha o custo atualizado.</p>
                         </div>
-                        <div class="p-6">
-                            <form method="POST" action="{{ route('recipe-items.store') }}" class="grid gap-4 md:grid-cols-4">
-                                @csrf
-                                <input type="hidden" name="recipe_id" value="{{ $recipe->id }}">
-
-                                <div class="md:col-span-2">
-                                    <x-input-label for="ingredient_id" :value="__('Ingrediente')" />
-                                    <select id="ingredient_id" name="ingredient_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        @foreach ($ingredients as $ingredient)
-                                            <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error :messages="$errors->get('ingredient_id')" class="mt-2" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="quantity_used" :value="__('Quantidade')" />
-                                    <x-text-input id="quantity_used" name="quantity_used" type="number" step="0.01" min="0.01" class="mt-1 block w-full" :value="old('quantity_used')" required />
-                                    <x-input-error :messages="$errors->get('quantity_used')" class="mt-2" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="unit_used" :value="__('Unidade')" />
-                                    <select id="unit_used" name="unit_used" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                        @foreach ($units as $unit)
-                                            <option value="{{ $unit }}" @selected(old('unit_used', 'un') === $unit)>{{ strtoupper($unit) }}</option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error :messages="$errors->get('unit_used')" class="mt-2" />
-                                </div>
-
-                                <div class="md:col-span-4 flex justify-end">
-                                    <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50">
-                                        Adicionar item
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        <form method="POST" action="{{ route('recipe-items.store') }}" class="mt-6 grid gap-4 md:grid-cols-4">
+                            @csrf
+                            <input type="hidden" name="recipe_id" value="{{ $recipe->id }}">
+                            <div class="md:col-span-2">
+                                <x-input-label for="ingredient_id" :value="__('Ingrediente')" />
+                                <select id="ingredient_id" name="ingredient_id" class="mt-1 block w-full">
+                                    @foreach ($ingredients as $ingredient)
+                                        <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('ingredient_id')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="quantity_used" :value="__('Quantidade')" />
+                                <x-text-input id="quantity_used" name="quantity_used" type="number" step="0.01" min="0.01" class="mt-1 block w-full" :value="old('quantity_used')" required />
+                                <x-input-error :messages="$errors->get('quantity_used')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="unit_used" :value="__('Unidade')" />
+                                <select id="unit_used" name="unit_used" class="mt-1 block w-full">
+                                    @foreach ($units as $unit)
+                                        <option value="{{ $unit }}" @selected(old('unit_used', 'un') === $unit)>{{ strtoupper($unit) }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('unit_used')" class="mt-2" />
+                            </div>
+                            <div class="md:col-span-4 flex justify-end">
+                                <button type="submit" class="button-primary">Adicionar item</button>
+                            </div>
+                        </form>
                     </div>
 
-                    <div class="rounded-lg bg-white shadow-sm sm:rounded-lg">
-                        <div class="border-b border-gray-100 px-6 py-4">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Itens da receita</h3>
+                    <div class="form-section">
+                        <div class="border-b pb-4" style="border-color: var(--pf-border);">
+                            <h3 class="form-section-title">Itens da receita</h3>
+                            <p class="form-section-subtitle">Revise quantidades, unidade e impacto de cada ingrediente.</p>
                         </div>
-                        <div class="p-6">
+                        <div class="mt-6">
                             @if ($recipe->items->isEmpty())
-                                <p class="text-sm text-gray-600">Esta receita ainda nao possui itens cadastrados.</p>
+                                <p class="auth-muted">Esta receita ainda nao possui itens cadastrados.</p>
                             @else
                                 <div class="space-y-4">
                                     @foreach ($recipe->items as $item)
-                                        <form method="POST" action="{{ route('recipe-items.update', $item->id) }}" class="rounded-lg border border-gray-200 p-4">
+                                        <form method="POST" action="{{ route('recipe-items.update', $item->id) }}" class="rounded-[24px] border p-4" style="border-color: var(--pf-border); background: #fbfdff;">
                                             @csrf
                                             @method('PUT')
                                             <div class="grid gap-4 md:grid-cols-5">
                                                 <div class="md:col-span-2">
                                                     <x-input-label :value="__('Ingrediente')" />
-                                                    <select name="ingredient_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                    <select name="ingredient_id" class="mt-1 block w-full">
                                                         @foreach ($ingredients as $ingredient)
                                                             <option value="{{ $ingredient->id }}" @selected($item->ingredient_id === $ingredient->id)>{{ $ingredient->name }}</option>
                                                         @endforeach
@@ -148,32 +129,26 @@
                                                 </div>
                                                 <div>
                                                     <x-input-label :value="__('Unidade')" />
-                                                    <select name="unit_used" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                    <select name="unit_used" class="mt-1 block w-full">
                                                         @foreach ($units as $unit)
                                                             <option value="{{ $unit }}" @selected($item->unit_used === $unit)>{{ strtoupper($unit) }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="text-sm text-gray-700">
-                                                    <p class="font-medium text-gray-900">Custo atual</p>
-                                                    <p class="mt-1">Unitario: R$ {{ number_format((float) $item->unit_cost_snapshot, 2, ',', '.') }}</p>
-                                                    <p>Total: R$ {{ number_format((float) $item->total_cost, 2, ',', '.') }}</p>
+                                                <div class="text-sm" style="color: var(--pf-text-soft);">
+                                                    <p class="font-semibold" style="color: var(--pf-text);">Custo atual</p>
+                                                    <p class="mt-1">Unitario: @money((float) $item->unit_cost_snapshot, $recipe->company)</p>
+                                                    <p>Total: @money((float) $item->total_cost, $recipe->company)</p>
                                                 </div>
                                             </div>
-
                                             <div class="mt-4 flex justify-end gap-3">
-                                                <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                                                    Salvar item
-                                                </button>
+                                                <button type="submit" class="button-secondary">Salvar item</button>
                                             </div>
                                         </form>
-
                                         <form method="POST" action="{{ route('recipe-items.destroy', $item->id) }}" class="flex justify-end" onsubmit="return confirm('Deseja remover este item da receita?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                                                Remover item
-                                            </button>
+                                            <button type="submit" class="button-secondary">Remover item</button>
                                         </form>
                                     @endforeach
                                 </div>
@@ -181,49 +156,43 @@
                         </div>
                     </div>
 
-                    <div class="rounded-lg bg-white shadow-sm sm:rounded-lg">
-                        <div class="border-b border-gray-100 px-6 py-4">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Custos extras</h3>
+                    <div class="form-section">
+                        <div class="border-b pb-4" style="border-color: var(--pf-border);">
+                            <h3 class="form-section-title">Custos extras</h3>
+                            <p class="form-section-subtitle">Acrescente despesas indiretas e percentuais para aproximar o custo real.</p>
                         </div>
-                        <div class="p-6 space-y-6">
+                        <div class="mt-6 space-y-6">
                             <form method="POST" action="{{ route('extra-costs.store') }}" class="grid gap-4 md:grid-cols-3">
                                 @csrf
                                 <input type="hidden" name="recipe_id" value="{{ $recipe->id }}">
-
                                 <div>
                                     <x-input-label for="description" :value="__('Descricao')" />
                                     <x-text-input id="description" name="description" type="text" class="mt-1 block w-full" :value="old('description')" required />
                                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                                 </div>
-
                                 <div>
                                     <x-input-label for="type" :value="__('Tipo')" />
-                                    <select id="type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <select id="type" name="type" class="mt-1 block w-full">
                                         <option value="fixed" @selected(old('type', 'fixed') === 'fixed')>Valor fixo</option>
                                         <option value="percentage" @selected(old('type') === 'percentage')>Percentual</option>
                                     </select>
                                     <x-input-error :messages="$errors->get('type')" class="mt-2" />
                                 </div>
-
                                 <div>
                                     <x-input-label for="value" :value="__('Valor')" />
                                     <x-text-input id="value" name="value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('value')" required />
                                     <x-input-error :messages="$errors->get('value')" class="mt-2" />
                                 </div>
-
                                 <div class="md:col-span-3 flex justify-end">
-                                    <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50">
-                                        Adicionar custo extra
-                                    </button>
+                                    <button type="submit" class="button-primary">Adicionar custo extra</button>
                                 </div>
                             </form>
-
                             @if ($recipe->extraCosts->isEmpty())
-                                <p class="text-sm text-gray-600">Nenhum custo extra cadastrado para esta receita.</p>
+                                <p class="auth-muted">Nenhum custo extra cadastrado para esta receita.</p>
                             @else
                                 <div class="space-y-4">
                                     @foreach ($recipe->extraCosts as $extraCost)
-                                        <form method="POST" action="{{ route('extra-costs.update', $extraCost->id) }}" class="rounded-lg border border-gray-200 p-4">
+                                        <form method="POST" action="{{ route('extra-costs.update', $extraCost->id) }}" class="rounded-[24px] border p-4" style="border-color: var(--pf-border); background: #fbfdff;">
                                             @csrf
                                             @method('PUT')
                                             <div class="grid gap-4 md:grid-cols-4">
@@ -233,7 +202,7 @@
                                                 </div>
                                                 <div>
                                                     <x-input-label :value="__('Tipo')" />
-                                                    <select name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                    <select name="type" class="mt-1 block w-full">
                                                         <option value="fixed" @selected($extraCost->type === 'fixed')>Valor fixo</option>
                                                         <option value="percentage" @selected($extraCost->type === 'percentage')>Percentual</option>
                                                     </select>
@@ -242,30 +211,25 @@
                                                     <x-input-label :value="__('Valor')" />
                                                     <x-text-input name="value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="$extraCost->value" required />
                                                 </div>
-                                                <div class="text-sm text-gray-700">
-                                                    <p class="font-medium text-gray-900">Impacto</p>
+                                                <div class="text-sm" style="color: var(--pf-text-soft);">
+                                                    <p class="font-semibold" style="color: var(--pf-text);">Impacto</p>
                                                     <p class="mt-1">
                                                         @if ($extraCost->type === 'percentage')
                                                             {{ number_format((float) $extraCost->value, 2, ',', '.') }}% sobre ingredientes
                                                         @else
-                                                            R$ {{ number_format((float) $extraCost->value, 2, ',', '.') }}
+                                                            @money((float) $extraCost->value, $recipe->company)
                                                         @endif
                                                     </p>
                                                 </div>
                                             </div>
                                             <div class="mt-4 flex justify-end gap-3">
-                                                <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                                                    Salvar custo extra
-                                                </button>
+                                                <button type="submit" class="button-secondary">Salvar custo extra</button>
                                             </div>
                                         </form>
-
                                         <form method="POST" action="{{ route('extra-costs.destroy', $extraCost->id) }}" class="flex justify-end" onsubmit="return confirm('Deseja remover este custo extra?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50">
-                                                Remover custo extra
-                                            </button>
+                                            <button type="submit" class="button-secondary">Remover custo extra</button>
                                         </form>
                                     @endforeach
                                 </div>
@@ -275,46 +239,25 @@
                 </div>
 
                 <div class="space-y-6">
-                    <div class="rounded-lg bg-white p-6 shadow-sm sm:rounded-lg">
-                        <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Resumo</h3>
-                        <dl class="mt-4 space-y-3 text-sm text-gray-700">
-                            <div class="flex justify-between gap-3">
-                                <dt>Produto</dt>
-                                <dd class="text-right font-medium">{{ $recipe->product?->name ?? 'Sem produto' }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3">
-                                <dt>Rendimento</dt>
-                                <dd class="text-right font-medium">{{ $recipe->yield_quantity }} {{ $recipe->yield_unit }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3">
-                                <dt>Custos extras</dt>
-                                <dd class="text-right font-medium">R$ {{ number_format((float) $recipe->extra_cost_total, 2, ',', '.') }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3">
-                                <dt>Embalagem</dt>
-                                <dd class="text-right font-medium">R$ {{ number_format((float) $recipe->packaging_cost_total, 2, ',', '.') }}</dd>
-                            </div>
-                            <div class="flex justify-between gap-3">
-                                <dt>Custo unitario</dt>
-                                <dd class="text-right font-medium">R$ {{ number_format((float) $recipe->unit_cost, 2, ',', '.') }}</dd>
-                            </div>
+                    <div class="surface-card">
+                        <h3 class="form-section-title">Resumo</h3>
+                        <dl class="mt-4 space-y-3 text-sm" style="color: var(--pf-text-soft);">
+                            <div class="flex justify-between gap-3"><dt>Produto</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->product?->name ?? 'Sem produto' }}</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Rendimento</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->yield_quantity }} {{ $recipe->yield_unit }}</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Custos extras</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->extra_cost_total, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Embalagem</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->packaging_cost_total, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Custo unitario</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->unit_cost, $recipe->company)</dd></div>
                         </dl>
                     </div>
 
                     @if ($recipe->preparation_method || $recipe->notes)
-                        <div class="rounded-lg bg-white p-6 shadow-sm sm:rounded-lg">
-                            <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Observacoes</h3>
+                        <div class="surface-card">
+                            <h3 class="form-section-title">Observacoes</h3>
                             @if ($recipe->preparation_method)
-                                <div class="mt-4">
-                                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Modo de preparo</p>
-                                    <p class="mt-1 whitespace-pre-line text-sm text-gray-700">{{ $recipe->preparation_method }}</p>
-                                </div>
+                                <div class="mt-4"><p class="metric-label">Modo de preparo</p><p class="mt-1 whitespace-pre-line text-sm leading-6" style="color: var(--pf-text-soft);">{{ $recipe->preparation_method }}</p></div>
                             @endif
                             @if ($recipe->notes)
-                                <div class="mt-4">
-                                    <p class="text-xs font-semibold uppercase tracking-wide text-gray-400">Notas</p>
-                                    <p class="mt-1 whitespace-pre-line text-sm text-gray-700">{{ $recipe->notes }}</p>
-                                </div>
+                                <div class="mt-4"><p class="metric-label">Notas</p><p class="mt-1 whitespace-pre-line text-sm leading-6" style="color: var(--pf-text-soft);">{{ $recipe->notes }}</p></div>
                             @endif
                         </div>
                     @endif
@@ -323,7 +266,3 @@
         </div>
     </div>
 </x-app-layout>
-
-
-
-

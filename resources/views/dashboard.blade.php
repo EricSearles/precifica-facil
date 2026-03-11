@@ -1,16 +1,16 @@
-﻿<x-app-layout>
+<x-app-layout>
     @php
         $companyId = auth()->user()->company_id;
         $metrics = [
-            ['label' => 'Ingredientes ativos', 'value' => \App\Models\Ingredient::where('company_id', $companyId)->where('is_active', true)->count(), 'caption' => 'Base da sua ficha técnica e custo de produção.'],
+            ['label' => 'Ingredientes ativos', 'value' => \App\Models\Ingredient::where('company_id', $companyId)->where('is_active', true)->count(), 'caption' => 'Base da sua ficha tecnica e custo de producao.'],
             ['label' => 'Produtos cadastrados', 'value' => \App\Models\Product::where('company_id', $companyId)->count(), 'caption' => 'Itens vendidos com margem, rendimento e embalagem.'],
-            ['label' => 'Receitas estruturadas', 'value' => \App\Models\Recipe::where('company_id', $companyId)->count(), 'caption' => 'Composições prontas para cálculo e revisão rápida.'],
-            ['label' => 'Custos extras', 'value' => \App\Models\ExtraCost::where('company_id', $companyId)->count(), 'caption' => 'Gás, perdas, taxas e demais impactos indiretos.'],
+            ['label' => 'Receitas estruturadas', 'value' => \App\Models\Recipe::where('company_id', $companyId)->count(), 'caption' => 'Composicoes prontas para calculo e revisao rapida.'],
+            ['label' => 'Custos extras', 'value' => \App\Models\ExtraCost::where('company_id', $companyId)->count(), 'caption' => 'Gas, perdas, taxas e demais impactos indiretos.'],
         ];
 
         $quickLinks = [
-            ['title' => 'Cadastrar ingrediente', 'description' => 'Monte a base dos insumos com custo de compra e unidade padrão.', 'route' => route('ingredients.create')],
-            ['title' => 'Criar produto', 'description' => 'Defina margem, rendimento e prepare o item para formação de preço.', 'route' => route('products.create')],
+            ['title' => 'Cadastrar ingrediente', 'description' => 'Monte a base dos insumos com custo de compra e unidade padrao.', 'route' => route('ingredients.create')],
+            ['title' => 'Criar produto', 'description' => 'Defina margem, rendimento e prepare o item para formacao de preco.', 'route' => route('products.create')],
             ['title' => 'Montar receita', 'description' => 'Vincule ingredientes, custos extras e embalagem para fechar o custo real.', 'route' => route('recipes.create')],
         ];
     @endphp
@@ -18,10 +18,8 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Painel principal</p>
-            <h2 class="page-title">Acompanhe seus custos e organize a precificação da empresa.</h2>
-            <p class="page-subtitle">
-                Este painel foi pensado para o uso diário: visão rápida do que já está estruturado e atalhos para alimentar a base do cálculo sem perder tempo.
-            </p>
+            <h2 class="page-title">Acompanhe seus custos e organize a precificacao da empresa.</h2>
+            <p class="page-subtitle">Este painel foi pensado para o uso diario: visao rapida do que ja esta estruturado e atalhos para alimentar a base do calculo sem perder tempo.</p>
         </div>
 
         <div class="page-actions">
@@ -46,44 +44,40 @@
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <p class="page-kicker">Fluxo recomendado</p>
-                        <h3 class="mt-2 text-2xl font-semibold text-slate-950">Monte o preço do jeito certo, sem pular etapas.</h3>
-                        <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
-                            A ordem que mais funciona no dia a dia é simples: cadastre insumos, organize os produtos, monte as receitas e só então refine com custos extras e embalagens.
-                        </p>
+                        <h3 class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">Monte o preco do jeito certo, sem pular etapas.</h3>
+                        <p class="mt-3 max-w-2xl text-sm leading-6" style="color: var(--pf-text-soft);">A ordem que mais funciona no dia a dia e simples: cadastre insumos, organize os produtos, monte as receitas e so entao refine com custos extras e embalagens.</p>
                     </div>
-                    <span class="badge-neutral">SaaS de gestão</span>
+                    <span class="badge-neutral">SaaS de gestao</span>
                 </div>
 
                 <div class="mt-8 grid gap-4 md:grid-cols-3">
                     @foreach ($quickLinks as $link)
-                        <a href="{{ $link['route'] }}" class="rounded-[24px] border border-slate-200/80 bg-slate-50/90 p-5 transition duration-200 ease-out hover:-translate-y-1 hover:bg-white">
-                            <p class="text-sm font-semibold text-slate-900">{{ $link['title'] }}</p>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">{{ $link['description'] }}</p>
+                        <a href="{{ $link['route'] }}" class="rounded-[24px] border p-5 transition duration-200 ease-out hover:-translate-y-1" style="border-color: var(--pf-border); background: #f8fbff;">
+                            <p class="text-sm font-semibold" style="color: var(--pf-text);">{{ $link['title'] }}</p>
+                            <p class="mt-2 text-sm leading-6" style="color: var(--pf-text-soft);">{{ $link['description'] }}</p>
                         </a>
                     @endforeach
                 </div>
             </article>
 
             <article class="surface-card">
-                <p class="page-kicker">Próximas ações</p>
-                <h3 class="mt-2 text-xl font-semibold text-slate-950">Checklist operacional</h3>
+                <p class="page-kicker">Proximas acoes</p>
+                <h3 class="mt-2 text-xl font-semibold" style="color: var(--pf-text);">Checklist operacional</h3>
                 <div class="mt-6 space-y-4">
-                    <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-4">
-                        <p class="text-sm font-semibold text-slate-900">1. Base de insumos</p>
-                        <p class="mt-1 text-sm text-slate-500">Garanta que os ingredientes tenham unidade, quantidade e preço corretos.</p>
+                    <div class="rounded-2xl border p-4" style="border-color: var(--pf-border); background: #fff;">
+                        <p class="text-sm font-semibold" style="color: var(--pf-text);">1. Base de insumos</p>
+                        <p class="mt-1 text-sm" style="color: var(--pf-text-soft);">Garanta que os ingredientes tenham unidade, quantidade e preco corretos.</p>
                     </div>
-                    <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-4">
-                        <p class="text-sm font-semibold text-slate-900">2. Receita completa</p>
-                        <p class="mt-1 text-sm text-slate-500">Adicione itens, custos extras e embalagens antes de validar o preço sugerido.</p>
+                    <div class="rounded-2xl border p-4" style="border-color: var(--pf-border); background: #fff;">
+                        <p class="text-sm font-semibold" style="color: var(--pf-text);">2. Receita completa</p>
+                        <p class="mt-1 text-sm" style="color: var(--pf-text-soft);">Adicione itens, custos extras e embalagens antes de validar o preco sugerido.</p>
                     </div>
-                    <div class="rounded-2xl border border-slate-200/80 bg-white/80 p-4">
-                        <p class="text-sm font-semibold text-slate-900">3. Revisão comercial</p>
-                        <p class="mt-1 text-sm text-slate-500">Confira margem, rendimento e status do produto para manter a operação saudável.</p>
+                    <div class="rounded-2xl border p-4" style="border-color: var(--pf-border); background: #fff;">
+                        <p class="text-sm font-semibold" style="color: var(--pf-text);">3. Revisao comercial</p>
+                        <p class="mt-1 text-sm" style="color: var(--pf-text-soft);">Confira margem, rendimento e status do produto para manter a operacao saudavel.</p>
                     </div>
                 </div>
             </article>
         </section>
     </div>
 </x-app-layout>
-
-

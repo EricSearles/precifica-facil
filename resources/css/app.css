@@ -4,19 +4,21 @@
 
 @layer base {
     :root {
-        --pf-bg: #f4f7f2;
-        --pf-surface: rgba(255, 255, 255, 0.92);
-        --pf-surface-strong: #ffffff;
-        --pf-border: rgba(148, 163, 184, 0.22);
-        --pf-border-strong: rgba(100, 116, 139, 0.22);
-        --pf-text: #112031;
-        --pf-text-soft: #516173;
-        --pf-title: #0f172a;
-        --pf-accent: #0f766e;
-        --pf-accent-soft: #d6f3ec;
-        --pf-accent-strong: #115e59;
-        --pf-warm: #e7f5d7;
-        --pf-shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
+        --pf-primary: #2563eb;
+        --pf-primary-hover: #1d4ed8;
+        --pf-secondary: #f59e0b;
+        --pf-success: #10b981;
+        --pf-warning: #f97316;
+        --pf-danger: #ef4444;
+        --pf-bg: #f8fafc;
+        --pf-surface: #ffffff;
+        --pf-border: #e5e7eb;
+        --pf-text: #1f2937;
+        --pf-text-soft: #6b7280;
+        --pf-sidebar: #1e293b;
+        --pf-sidebar-text: #e5e7eb;
+        --pf-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        --pf-shadow-soft: 0 10px 24px rgba(37, 99, 235, 0.08);
     }
 
     [x-cloak] {
@@ -28,30 +30,51 @@
     }
 
     body {
-        @apply min-h-full antialiased text-slate-900;
+        @apply min-h-full antialiased;
         font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
         background:
-            radial-gradient(circle at top left, rgba(15, 118, 110, 0.10), transparent 26%),
-            radial-gradient(circle at bottom right, rgba(190, 242, 100, 0.14), transparent 22%),
-            linear-gradient(180deg, #f8fbf7 0%, #f3f6f1 100%);
+            radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 28%),
+            radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.09), transparent 24%),
+            linear-gradient(180deg, #fbfdff 0%, var(--pf-bg) 100%);
         color: var(--pf-text);
     }
 
     h1, h2, h3, h4, h5, h6 {
-        color: var(--pf-title);
+        color: var(--pf-text);
         letter-spacing: -0.02em;
     }
 
+    a {
+        color: inherit;
+    }
+
     select,
-    textarea {
-        @apply rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition duration-200 ease-out;
-        border-color: var(--pf-border-strong);
+    textarea,
+    input[type='text'],
+    input[type='email'],
+    input[type='password'],
+    input[type='number'] {
+        @apply rounded-2xl bg-white px-4 py-3 text-sm shadow-sm transition duration-200 ease-out;
+        border: 1px solid var(--pf-border);
+        color: var(--pf-text);
     }
 
     select:focus,
-    textarea:focus {
-        @apply border-transparent outline-none ring-2 ring-teal-500/30;
-        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.10);
+    textarea:focus,
+    input:focus {
+        @apply outline-none ring-2 ring-offset-0;
+        border-color: var(--pf-primary);
+        --tw-ring-color: rgba(37, 99, 235, 0.18);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+    }
+
+    input[type='checkbox'],
+    input[type='radio'] {
+        accent-color: var(--pf-primary);
+    }
+
+    ::placeholder {
+        color: var(--pf-text-soft);
     }
 }
 
@@ -61,54 +84,61 @@
     }
 
     .mobile-sidebar-shell {
-        @apply fixed inset-y-0 left-0 z-50 w-[296px] border-r px-5 py-5 transition-transform duration-300 ease-out lg:hidden;
-        background: linear-gradient(180deg, rgba(9, 19, 35, 0.96) 0%, rgba(15, 23, 42, 0.94) 100%);
-        border-color: rgba(148, 163, 184, 0.12);
-        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.16);
+        @apply fixed inset-y-0 left-0 z-50 w-[304px] border-r px-5 py-5 transition-transform duration-300 ease-out lg:hidden;
+        background: linear-gradient(180deg, #243447 0%, var(--pf-sidebar) 100%);
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.24);
     }
 
     .desktop-sidebar-shell {
-        @apply hidden w-[296px] shrink-0 border-r px-5 py-5 lg:block;
-        background: linear-gradient(180deg, rgba(9, 19, 35, 0.96) 0%, rgba(15, 23, 42, 0.94) 100%);
-        border-color: rgba(148, 163, 184, 0.12);
-        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.16);
+        @apply hidden w-[304px] shrink-0 border-r px-5 py-5 lg:block;
+        background: linear-gradient(180deg, #243447 0%, var(--pf-sidebar) 100%);
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: 24px 0 60px rgba(15, 23, 42, 0.14);
     }
 
     .sidebar-panel {
-        @apply flex h-full flex-col rounded-[28px] border border-white/10 bg-white/5 p-4 backdrop-blur-xl;
+        @apply flex h-full flex-col rounded-[28px] border p-4 backdrop-blur-xl;
+        border-color: rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
     }
 
     .brand-mark {
         @apply inline-flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-lg;
-        background: linear-gradient(135deg, #14b8a6 0%, #84cc16 100%);
+        background: linear-gradient(135deg, var(--pf-primary) 0%, var(--pf-secondary) 100%);
     }
 
     .brand-badge {
-        @apply inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-100/90;
-        background: rgba(20, 184, 166, 0.14);
+        @apply inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em];
+        color: #dbeafe;
+        background: rgba(37, 99, 235, 0.18);
     }
 
     .sidebar-section-label {
-        @apply px-3 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400;
+        @apply px-3 text-[11px] font-semibold uppercase tracking-[0.24em];
+        color: rgba(229, 231, 235, 0.6);
     }
 
     .sidebar-link {
-        @apply flex items-center justify-between rounded-2xl px-3 py-3 text-sm font-medium text-slate-300 transition duration-200 ease-out;
+        @apply flex items-center justify-between rounded-2xl px-3 py-3 text-sm font-medium transition duration-200 ease-out;
+        color: var(--pf-sidebar-text);
     }
 
     .sidebar-link:hover {
-        @apply text-white;
         background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
     }
 
     .sidebar-link-active {
-        @apply text-white shadow-sm;
-        background: linear-gradient(135deg, rgba(20, 184, 166, 0.22) 0%, rgba(132, 204, 22, 0.18) 100%);
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.34) 0%, rgba(29, 78, 216, 0.58) 100%);
+        color: #ffffff;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
     .sidebar-pill {
-        @apply inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-teal-100;
-        background: rgba(20, 184, 166, 0.18);
+        @apply inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em];
+        background: rgba(245, 158, 11, 0.16);
+        color: #fde68a;
     }
 
     .content-shell {
@@ -117,23 +147,33 @@
 
     .topbar-shell {
         @apply sticky top-0 z-30 flex items-center justify-between gap-4 border-b px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-10;
-        background: rgba(244, 247, 242, 0.86);
-        border-color: rgba(148, 163, 184, 0.16);
+        background: rgba(248, 250, 252, 0.92);
+        border-color: var(--pf-border);
     }
 
     .topbar-meta {
-        @apply flex items-center gap-3 text-sm text-slate-500;
+        @apply flex items-center gap-3 text-sm;
+        color: var(--pf-text-soft);
     }
 
     .topbar-chip {
-        @apply inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold text-slate-600;
-        background: rgba(255, 255, 255, 0.76);
-        border-color: var(--pf-border-strong);
+        @apply inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold;
+        color: var(--pf-primary);
+        background: rgba(37, 99, 235, 0.06);
+        border-color: rgba(37, 99, 235, 0.14);
     }
 
     .topbar-action {
-        @apply inline-flex items-center gap-2 rounded-2xl border bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 ease-out hover:bg-white;
-        border-color: var(--pf-border-strong);
+        @apply inline-flex items-center gap-2 rounded-2xl border px-4 py-2.5 text-sm font-semibold shadow-sm transition duration-200 ease-out;
+        border-color: var(--pf-border);
+        background: var(--pf-surface);
+        color: var(--pf-text);
+    }
+
+    .topbar-action:hover {
+        background: #eff6ff;
+        border-color: rgba(37, 99, 235, 0.18);
+        color: var(--pf-primary);
     }
 
     .page-shell {
@@ -145,68 +185,80 @@
     }
 
     .page-kicker {
-        @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-teal-700;
+        @apply text-[11px] font-semibold uppercase tracking-[0.24em];
+        color: var(--pf-primary);
     }
 
     .page-title {
-        @apply text-3xl font-semibold leading-tight text-slate-950 sm:text-[2rem];
+        @apply text-3xl font-semibold leading-tight sm:text-[2rem];
+        color: var(--pf-text);
     }
 
     .page-subtitle {
-        @apply mt-2 max-w-3xl text-sm leading-6 text-slate-500;
+        @apply mt-2 max-w-3xl text-sm leading-6;
+        color: var(--pf-text-soft);
     }
 
     .page-actions {
         @apply flex flex-wrap items-center gap-3;
     }
 
-    .surface-card {
-        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)] backdrop-blur-xl;
+    .surface-card,
+    .surface-card-strong,
+    .form-section,
+    .table-shell,
+    .metric-card {
         background: var(--pf-surface);
-        border-color: var(--pf-border);
+        border: 1px solid var(--pf-border);
+        box-shadow: var(--pf-shadow);
     }
 
-    .surface-card-strong {
-        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)];
-        background: var(--pf-surface-strong);
-        border-color: var(--pf-border);
+    .surface-card,
+    .surface-card-strong,
+    .form-section,
+    .table-shell {
+        @apply rounded-[28px];
+    }
+
+    .surface-card,
+    .surface-card-strong,
+    .form-section {
+        @apply p-6;
     }
 
     .metric-card {
-        @apply rounded-[24px] border p-5;
-        background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.94) 100%);
-        border-color: var(--pf-border);
+        @apply rounded-[24px] p-5;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     }
 
     .metric-label {
-        @apply text-xs font-semibold uppercase tracking-[0.22em] text-slate-400;
+        @apply text-xs font-semibold uppercase tracking-[0.22em];
+        color: var(--pf-text-soft);
     }
 
     .metric-value {
-        @apply mt-3 text-3xl font-semibold text-slate-950;
+        @apply mt-3 text-3xl font-semibold;
+        color: var(--pf-text);
     }
 
     .metric-caption {
-        @apply mt-2 text-sm text-slate-500;
-    }
-
-    .table-shell {
-        @apply overflow-hidden rounded-[28px] border shadow-[var(--pf-shadow)];
-        background: var(--pf-surface);
-        border-color: var(--pf-border);
+        @apply mt-2 text-sm;
+        color: var(--pf-text-soft);
     }
 
     .table-toolbar {
         @apply flex flex-col gap-3 border-b px-6 py-5 lg:flex-row lg:items-center lg:justify-between;
-        border-color: rgba(148, 163, 184, 0.14);
+        border-color: var(--pf-border);
     }
 
     .table-title {
-        @apply text-lg font-semibold text-slate-900;
+        @apply text-lg font-semibold;
+        color: var(--pf-text);
     }
 
     .table-description {
-        @apply mt-1 text-sm text-slate-500;
+        @apply mt-1 text-sm;
+        color: var(--pf-text-soft);
     }
 
     .data-table {
@@ -214,16 +266,19 @@
     }
 
     .data-table thead th {
-        @apply px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400;
+        @apply px-6 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.18em];
+        color: var(--pf-text-soft);
+        background: #fbfcfe;
     }
 
     .data-table tbody td {
-        @apply px-6 py-5 align-top text-slate-600;
-        border-top: 1px solid rgba(148, 163, 184, 0.12);
+        @apply px-6 py-5 align-top;
+        color: var(--pf-text-soft);
+        border-top: 1px solid var(--pf-border);
     }
 
     .data-table tbody tr:hover {
-        background: rgba(248, 250, 252, 0.82);
+        background: rgba(37, 99, 235, 0.03);
     }
 
     .table-actions-head {
@@ -239,8 +294,16 @@
     }
 
     .button-table-action {
-        @apply inline-flex items-center justify-center rounded-xl border bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition duration-200 ease-out hover:bg-slate-50;
-        border-color: var(--pf-border-strong);
+        @apply inline-flex items-center justify-center rounded-xl px-3 py-1.5 text-xs font-semibold transition duration-200 ease-out;
+        border: 1px solid var(--pf-border);
+        background: var(--pf-surface);
+        color: var(--pf-text);
+    }
+
+    .button-table-action:hover {
+        background: #eff6ff;
+        border-color: rgba(37, 99, 235, 0.18);
+        color: var(--pf-primary);
     }
 
     .channel-price-list {
@@ -248,41 +311,39 @@
     }
 
     .channel-price-item {
-        @apply flex items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-600;
+        @apply flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs;
+        background: #f8fafc;
+        color: var(--pf-text-soft);
     }
 
     .channel-price-name {
-        @apply font-medium text-slate-500;
+        @apply font-medium;
+        color: var(--pf-text-soft);
     }
 
     .channel-price-value {
-        @apply font-semibold text-slate-900;
+        @apply font-semibold;
+        color: var(--pf-text);
     }
 
     .entity-title {
-        @apply font-semibold text-slate-900;
+        @apply font-semibold;
+        color: var(--pf-text);
     }
 
     .entity-meta {
-        @apply mt-1 text-xs text-slate-500;
-    }
-
-    .form-grid {
-        @apply grid gap-6;
-    }
-
-    .form-section {
-        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)];
-        background: var(--pf-surface);
-        border-color: var(--pf-border);
+        @apply mt-1 text-xs;
+        color: var(--pf-text-soft);
     }
 
     .form-section-title {
-        @apply text-lg font-semibold text-slate-900;
+        @apply text-lg font-semibold;
+        color: var(--pf-text);
     }
 
     .form-section-subtitle {
-        @apply mt-1 text-sm text-slate-500;
+        @apply mt-1 text-sm;
+        color: var(--pf-text-soft);
     }
 
     .field-grid-2 {
@@ -294,50 +355,175 @@
     }
 
     .button-primary {
-        @apply inline-flex items-center justify-center rounded-2xl border px-4 py-2.5 text-sm font-semibold shadow-sm transition duration-200 ease-out hover:-translate-y-0.5;
-        background: linear-gradient(135deg, rgba(15, 118, 110, 0.10) 0%, rgba(132, 204, 22, 0.10) 100%);
-        border-color: rgba(15, 118, 110, 0.16);
-        color: var(--pf-accent-strong);
+        @apply inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold shadow-sm transition duration-200 ease-out;
+        background: var(--pf-primary);
+        border: 1px solid var(--pf-primary);
+        color: #ffffff;
+        box-shadow: var(--pf-shadow-soft);
+    }
+
+    .button-primary:hover {
+        background: var(--pf-primary-hover);
+        border-color: var(--pf-primary-hover);
+        transform: translateY(-1px);
     }
 
     .button-secondary {
-        @apply inline-flex items-center justify-center rounded-2xl border bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 ease-out hover:bg-slate-50 hover:-translate-y-0.5;
-        border-color: var(--pf-border-strong);
+        @apply inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold transition duration-200 ease-out;
+        border: 1px solid var(--pf-border);
+        background: var(--pf-surface);
+        color: var(--pf-text);
+    }
+
+    .button-secondary:hover {
+        background: #f9fafb;
+        border-color: #cbd5e1;
     }
 
     .button-ghost {
-        @apply inline-flex items-center justify-center rounded-2xl px-3 py-2 text-sm font-medium text-slate-500 transition duration-200 ease-out hover:bg-white/70 hover:text-slate-800;
+        @apply inline-flex items-center justify-center rounded-2xl px-3 py-2 text-sm font-medium transition duration-200 ease-out;
+        color: var(--pf-sidebar-text);
+    }
+
+    .button-ghost:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+    }
+
+    .flash-success,
+    .flash-error,
+    .flash-warning {
+        @apply rounded-2xl border px-4 py-3 text-sm font-medium;
     }
 
     .flash-success {
-        @apply rounded-2xl border px-4 py-3 text-sm font-medium;
-        background: rgba(22, 163, 74, 0.08);
-        color: #166534;
-        border-color: rgba(34, 197, 94, 0.14);
+        background: rgba(16, 185, 129, 0.08);
+        color: #047857;
+        border-color: rgba(16, 185, 129, 0.18);
+    }
+
+    .flash-warning {
+        background: rgba(249, 115, 22, 0.08);
+        color: #c2410c;
+        border-color: rgba(249, 115, 22, 0.18);
     }
 
     .flash-error {
-        @apply rounded-2xl border px-4 py-3 text-sm font-medium;
         background: rgba(239, 68, 68, 0.08);
-        color: #991b1b;
-        border-color: rgba(239, 68, 68, 0.14);
+        color: #b91c1c;
+        border-color: rgba(239, 68, 68, 0.18);
+    }
+
+    .badge-neutral,
+    .badge-success,
+    .badge-warning,
+    .badge-danger,
+    .badge-accent {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
     }
 
     .badge-neutral {
-        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
-        background: rgba(148, 163, 184, 0.14);
-        color: #475569;
+        background: #eef2f7;
+        color: var(--pf-text-soft);
     }
 
     .badge-success {
-        @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
-        background: rgba(34, 197, 94, 0.12);
-        color: #166534;
+        background: rgba(16, 185, 129, 0.12);
+        color: #047857;
+    }
+
+    .badge-warning {
+        background: rgba(249, 115, 22, 0.12);
+        color: #c2410c;
+    }
+
+    .badge-danger {
+        background: rgba(239, 68, 68, 0.12);
+        color: #b91c1c;
+    }
+
+    .badge-accent {
+        background: rgba(245, 158, 11, 0.16);
+        color: #b45309;
     }
 
     .empty-state {
         @apply rounded-[24px] border border-dashed px-6 py-10 text-center;
-        border-color: rgba(148, 163, 184, 0.2);
-        background: rgba(255, 255, 255, 0.66);
+        border-color: #dbe3ee;
+        background: rgba(255, 255, 255, 0.74);
+    }
+
+    .auth-shell {
+        @apply min-h-screen px-4 py-10 sm:px-6;
+        background:
+            radial-gradient(circle at top center, rgba(37, 99, 235, 0.08), transparent 30%),
+            linear-gradient(180deg, #fbfdff 0%, var(--pf-bg) 100%);
+    }
+
+    .auth-card {
+        @apply mx-auto w-full max-w-md rounded-[28px] border p-8 shadow-[var(--pf-shadow)];
+        background: var(--pf-surface);
+        border-color: var(--pf-border);
+    }
+
+    .auth-brand {
+        @apply mx-auto mb-6 flex w-full max-w-md items-center gap-4;
+    }
+
+    .auth-link {
+        @apply text-sm font-medium transition duration-200 ease-out;
+        color: var(--pf-primary);
+    }
+
+    .auth-link:hover {
+        color: var(--pf-primary-hover);
+    }
+
+    .auth-muted {
+        @apply text-sm;
+        color: var(--pf-text-soft);
+    }
+
+    .welcome-shell {
+        @apply min-h-screen;
+        background:
+            radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 26%),
+            radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.12), transparent 22%),
+            linear-gradient(180deg, #fbfdff 0%, var(--pf-bg) 100%);
+    }
+
+    .welcome-nav {
+        @apply mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10;
+    }
+
+    .welcome-hero {
+        @apply mx-auto grid max-w-7xl gap-12 px-6 py-12 lg:grid-cols-[1.2fr_0.8fr] lg:px-10 lg:py-20;
+    }
+
+    .welcome-panel {
+        @apply rounded-[32px] border p-8 shadow-[var(--pf-shadow)];
+        background: rgba(255, 255, 255, 0.9);
+        border-color: var(--pf-border);
+    }
+
+    .welcome-metric {
+        @apply rounded-[24px] border p-5;
+        background: #ffffff;
+        border-color: var(--pf-border);
+    }
+
+    .welcome-kicker {
+        @apply text-xs font-semibold uppercase tracking-[0.24em];
+        color: var(--pf-primary);
+    }
+
+    .welcome-title {
+        @apply mt-4 text-4xl font-semibold leading-tight lg:text-5xl;
+        color: var(--pf-text);
+    }
+
+    .welcome-copy {
+        @apply mt-5 max-w-2xl text-base leading-8;
+        color: var(--pf-text-soft);
     }
 }

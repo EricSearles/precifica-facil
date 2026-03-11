@@ -7,7 +7,7 @@
         ['label' => 'Canais de venda', 'route' => 'sales-channels.index', 'match' => 'sales-channels.*'],
         ['label' => 'Produtos', 'route' => 'products.index', 'match' => 'products.*'],
         ['label' => 'Receitas', 'route' => 'recipes.index', 'match' => 'recipes.*'],
-        ['label' => 'Configurações', 'route' => 'settings.edit', 'match' => 'settings.*'],
+        ['label' => 'Configuracoes', 'route' => 'settings.edit', 'match' => 'settings.*'],
     ];
 @endphp
 
@@ -22,21 +22,21 @@
                 </span>
 
                 <div>
-                    <div class="brand-badge">SaaS de precificação</div>
-                    <h1 class="mt-3 text-xl font-semibold text-white">Precifica Fácil</h1>
-                    <p class="mt-1 text-sm leading-6 text-slate-300">
-                        Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negócios de alimentação.
+                    <div class="brand-badge">SaaS de precificacao</div>
+                    <h1 class="mt-3 text-xl font-semibold text-white">Precifica Facil</h1>
+                    <p class="mt-1 text-sm leading-6" style="color: rgba(229, 231, 235, 0.82);">
+                        Gestao simples para doceiras, confeiteiras, salgadeiras e pequenos negocios de alimentacao.
                     </p>
                 </div>
             </div>
 
-            <button type="button" class="button-ghost text-slate-300 lg:hidden" @click="sidebarOpen = false">
+            <button type="button" class="button-ghost lg:hidden" @click="sidebarOpen = false">
                 Fechar
             </button>
         </div>
 
         <div class="mt-8 space-y-3">
-            <div class="sidebar-section-label">Gestão</div>
+            <div class="sidebar-section-label">Gestao</div>
 
             @foreach ($navItems as $item)
                 @php
@@ -51,11 +51,11 @@
             @endforeach
         </div>
 
-        <div class="mt-auto rounded-[24px] border border-white/10 bg-white/5 p-4 text-slate-200">
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Sessão</p>
+        <div class="mt-auto rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
+            <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessao</p>
             <div class="mt-4">
                 <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
-                <p class="mt-1 text-sm text-slate-300">{{ Auth::user()->email }}</p>
+                <p class="mt-1 text-sm" style="color: rgba(229,231,235,0.78);">{{ Auth::user()->email }}</p>
             </div>
 
             <div class="mt-5 flex flex-wrap gap-2">
@@ -65,7 +65,7 @@
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="button-ghost text-xs text-slate-200">
+                    <button type="submit" class="button-ghost text-xs">
                         Sair
                     </button>
                 </form>
@@ -82,16 +82,16 @@
             </span>
 
             <div>
-                <div class="brand-badge">SaaS de precificação</div>
-                <h1 class="mt-3 text-xl font-semibold text-white">Precifica Fácil</h1>
-                <p class="mt-1 text-sm leading-6 text-slate-300">
-                    Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negócios de alimentação.
+                <div class="brand-badge">SaaS de precificacao</div>
+                <h1 class="mt-3 text-xl font-semibold text-white">Precifica Facil</h1>
+                <p class="mt-1 text-sm leading-6" style="color: rgba(229, 231, 235, 0.82);">
+                    Gestao simples para doceiras, confeiteiras, salgadeiras e pequenos negocios de alimentacao.
                 </p>
             </div>
         </div>
 
         <div class="mt-8 space-y-3">
-            <div class="sidebar-section-label">Gestão</div>
+            <div class="sidebar-section-label">Gestao</div>
 
             @foreach ($navItems as $item)
                 @php
@@ -106,11 +106,11 @@
             @endforeach
         </div>
 
-        <div class="mt-auto rounded-[24px] border border-white/10 bg-white/5 p-4 text-slate-200">
-            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Sessão</p>
+        <div class="mt-auto rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
+            <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessao</p>
             <div class="mt-4">
                 <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
-                <p class="mt-1 text-sm text-slate-300">{{ Auth::user()->email }}</p>
+                <p class="mt-1 text-sm" style="color: rgba(229,231,235,0.78);">{{ Auth::user()->email }}</p>
             </div>
 
             <div class="mt-5 flex flex-wrap gap-2">
@@ -120,7 +120,7 @@
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="button-ghost text-xs text-slate-200">
+                    <button type="submit" class="button-ghost text-xs">
                         Sair
                     </button>
                 </form>

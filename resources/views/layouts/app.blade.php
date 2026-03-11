@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Precifica Fácil') }}</title>
+        <title>{{ config('app.name', 'Precifica Facil') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=manrope:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -19,31 +19,23 @@
             <div class="content-shell">
                 <header class="topbar-shell">
                     <div class="flex items-center gap-3">
-                        <button
-                            type="button"
-                            class="button-secondary lg:hidden"
-                            @click="sidebarOpen = true"
-                        >
-                            Menu
-                        </button>
+                        <button type="button" class="button-secondary lg:hidden" @click="sidebarOpen = true">Menu</button>
 
                         <div class="topbar-meta">
-                            <span class="topbar-chip">Precifica Fácil</span>
-                            <span class="hidden md:inline">Painel de gestão e formação de preços</span>
+                            <span class="topbar-chip">Precifica Facil</span>
+                            <span class="hidden md:inline">Painel de gestao e formacao de precos</span>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-3">
                         <div class="hidden md:flex md:items-center md:gap-3 md:text-right">
                             <div>
-                                <p class="text-sm font-semibold text-slate-900">{{ Auth::user()->name }}</p>
-                                <p class="text-xs text-slate-500">{{ Auth::user()->company?->name ?? 'Empresa ativa' }}</p>
+                                <p class="text-sm font-semibold" style="color: var(--pf-text);">{{ Auth::user()->name }}</p>
+                                <p class="text-xs" style="color: var(--pf-text-soft);">{{ Auth::user()->company?->name ?? 'Empresa ativa' }}</p>
                             </div>
                         </div>
 
-                        <a href="{{ route('profile.edit') }}" class="topbar-action">
-                            Conta
-                        </a>
+                        <a href="{{ route('profile.edit') }}" class="topbar-action">Conta</a>
                     </div>
                 </header>
 
@@ -60,5 +52,3 @@
         </div>
     </body>
 </html>
-
-
