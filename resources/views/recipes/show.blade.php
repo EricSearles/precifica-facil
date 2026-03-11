@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <div class="grid gap-6 lg:grid-cols-3">
+            <div class="grid gap-6 lg:grid-cols-3 lg:items-start">
                 <div class="space-y-6 lg:col-span-2">
                     <div class="form-section">
                         <div class="border-b pb-4" style="border-color: var(--pf-border);">
@@ -99,7 +99,35 @@
                             </div>
                         </form>
                     </div>
+                </div>
 
+                <div class="space-y-6">
+                    <div class="surface-card">
+                        <h3 class="form-section-title">Resumo</h3>
+                        <dl class="mt-4 space-y-3 text-sm" style="color: var(--pf-text-soft);">
+                            <div class="flex justify-between gap-3"><dt>Produto</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->product?->name ?? 'Sem produto' }}</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Rendimento</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->yield_quantity }} {{ $recipe->yield_unit }}</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Custos extras</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->extra_cost_total, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Embalagem</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->packaging_cost_total, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Custo unitario</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->unit_cost, $recipe->company)</dd></div>
+                        </dl>
+                    </div>
+
+                    @if ($recipe->preparation_method || $recipe->notes)
+                        <div class="surface-card">
+                            <h3 class="form-section-title">Observacoes</h3>
+                            @if ($recipe->preparation_method)
+                                <div class="mt-4"><p class="metric-label">Modo de preparo</p><p class="mt-1 whitespace-pre-line text-sm leading-6" style="color: var(--pf-text-soft);">{{ $recipe->preparation_method }}</p></div>
+                            @endif
+                            @if ($recipe->notes)
+                                <div class="mt-4"><p class="metric-label">Notas</p><p class="mt-1 whitespace-pre-line text-sm leading-6" style="color: var(--pf-text-soft);">{{ $recipe->notes }}</p></div>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="space-y-6">
                     <div class="form-section">
                         <div class="border-b pb-4" style="border-color: var(--pf-border);">
                             <h3 class="form-section-title">Itens da receita</h3>
@@ -137,18 +165,20 @@
                                                 </div>
                                                 <div class="text-sm" style="color: var(--pf-text-soft);">
                                                     <p class="font-semibold" style="color: var(--pf-text);">Custo atual</p>
-                                                    <p class="mt-1">Unitario: @money((float) $item->unit_cost_snapshot, $recipe->company)</p>
-                                                    <p>Total: @money((float) $item->total_cost, $recipe->company)</p>
+                                                    <div class="detail-stack">
+                                                        <p class="detail-line"><span class="detail-label">Unitario:</span><span class="detail-value">@money((float) $item->unit_cost_snapshot, $recipe->company)</span></p>
+                                                        <p class="detail-line"><span class="detail-label">Total:</span><span class="detail-value">@money((float) $item->total_cost, $recipe->company)</span></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="mt-4 flex justify-end gap-3">
                                                 <button type="submit" class="button-secondary">Salvar item</button>
+                                                <button type="submit" form="delete-recipe-item-{{ $item->id }}" class="button-secondary" onclick="return confirm('Deseja remover este item da receita?');">Remover item</button>
                                             </div>
                                         </form>
-                                        <form method="POST" action="{{ route('recipe-items.destroy', $item->id) }}" class="flex justify-end" onsubmit="return confirm('Deseja remover este item da receita?');">
+                                        <form id="delete-recipe-item-{{ $item->id }}" method="POST" action="{{ route('recipe-items.destroy', $item->id) }}" class="hidden">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="button-secondary">Remover item</button>
                                         </form>
                                     @endforeach
                                 </div>
@@ -180,8 +210,18 @@
                                 </div>
                                 <div>
                                     <x-input-label for="value" :value="__('Valor')" />
-                                    <x-text-input id="value" name="value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('value')" required />
+                                    <x-text-input id="value" name="value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('value')" />
                                     <x-input-error :messages="$errors->get('value')" class="mt-2" />
+                                </div>
+                                <div>
+                                    <x-input-label for="labor_minutes" :value="__('Tempo de mão de obra (min)')" />
+                                    <x-text-input id="labor_minutes" name="labor_minutes" type="number" step="1" min="1" class="mt-1 block w-full" :value="old('labor_minutes')" />
+                                    <x-input-error :messages="$errors->get('labor_minutes')" class="mt-2" />
+                                </div>
+                                <div>
+                                    <x-input-label for="labor_hourly_rate" :value="__('Valor da hora')" />
+                                    <x-text-input id="labor_hourly_rate" name="labor_hourly_rate" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('labor_hourly_rate')" />
+                                    <x-input-error :messages="$errors->get('labor_hourly_rate')" class="mt-2" />
                                 </div>
                                 <div class="md:col-span-3 flex justify-end">
                                     <button type="submit" class="button-primary">Adicionar custo extra</button>
@@ -209,9 +249,17 @@
                                                 </div>
                                                 <div>
                                                     <x-input-label :value="__('Valor')" />
-                                                    <x-text-input name="value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="$extraCost->value" required />
+                                                    <x-text-input name="value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="$extraCost->value" />
                                                 </div>
-                                                <div class="text-sm" style="color: var(--pf-text-soft);">
+                                                <div>
+                                                    <x-input-label :value="__('Tempo de mão de obra (min)')" />
+                                                    <x-text-input name="labor_minutes" type="number" step="1" min="1" class="mt-1 block w-full" :value="$extraCost->labor_minutes" />
+                                                </div>
+                                                <div>
+                                                    <x-input-label :value="__('Valor da hora')" />
+                                                    <x-text-input name="labor_hourly_rate" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="$extraCost->labor_hourly_rate" />
+                                                </div>
+                                                <div class="text-sm md:col-span-2" style="color: var(--pf-text-soft);">
                                                     <p class="font-semibold" style="color: var(--pf-text);">Impacto</p>
                                                     <p class="mt-1">
                                                         @if ($extraCost->type === 'percentage')
@@ -220,6 +268,11 @@
                                                             @money((float) $extraCost->value, $recipe->company)
                                                         @endif
                                                     </p>
+                                                    @if ($extraCost->labor_minutes && $extraCost->labor_hourly_rate)
+                                                        <p class="mt-1">
+                                                            {{ $extraCost->labor_minutes }} min x @money((float) $extraCost->labor_hourly_rate, $recipe->company) / hora
+                                                        </p>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="mt-4 flex justify-end gap-3">
@@ -236,32 +289,6 @@
                             @endif
                         </div>
                     </div>
-                </div>
-
-                <div class="space-y-6">
-                    <div class="surface-card">
-                        <h3 class="form-section-title">Resumo</h3>
-                        <dl class="mt-4 space-y-3 text-sm" style="color: var(--pf-text-soft);">
-                            <div class="flex justify-between gap-3"><dt>Produto</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->product?->name ?? 'Sem produto' }}</dd></div>
-                            <div class="flex justify-between gap-3"><dt>Rendimento</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->yield_quantity }} {{ $recipe->yield_unit }}</dd></div>
-                            <div class="flex justify-between gap-3"><dt>Custos extras</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->extra_cost_total, $recipe->company)</dd></div>
-                            <div class="flex justify-between gap-3"><dt>Embalagem</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->packaging_cost_total, $recipe->company)</dd></div>
-                            <div class="flex justify-between gap-3"><dt>Custo unitario</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->unit_cost, $recipe->company)</dd></div>
-                        </dl>
-                    </div>
-
-                    @if ($recipe->preparation_method || $recipe->notes)
-                        <div class="surface-card">
-                            <h3 class="form-section-title">Observacoes</h3>
-                            @if ($recipe->preparation_method)
-                                <div class="mt-4"><p class="metric-label">Modo de preparo</p><p class="mt-1 whitespace-pre-line text-sm leading-6" style="color: var(--pf-text-soft);">{{ $recipe->preparation_method }}</p></div>
-                            @endif
-                            @if ($recipe->notes)
-                                <div class="mt-4"><p class="metric-label">Notas</p><p class="mt-1 whitespace-pre-line text-sm leading-6" style="color: var(--pf-text-soft);">{{ $recipe->notes }}</p></div>
-                            @endif
-                        </div>
-                    @endif
-                </div>
             </div>
         </div>
     </div>

@@ -54,7 +54,7 @@
     input[type='email'],
     input[type='password'],
     input[type='number'] {
-        @apply rounded-2xl bg-white px-4 py-3 text-sm shadow-sm transition duration-200 ease-out;
+        @apply rounded-2xl bg-white px-4 py-2.5 text-sm shadow-sm transition duration-200 ease-out;
         border: 1px solid var(--pf-border);
         color: var(--pf-text);
     }
@@ -354,6 +354,42 @@
         @apply grid gap-6 md:grid-cols-3;
     }
 
+    .detail-stack {
+        @apply mt-2 space-y-1 text-sm;
+        color: var(--pf-text-soft);
+    }
+
+    .detail-line {
+        @apply flex items-center gap-2;
+    }
+
+    .detail-label {
+        @apply font-medium;
+        color: var(--pf-text);
+    }
+
+    .detail-value {
+        color: var(--pf-text-soft);
+    }
+
+    .recipe-item-grid {
+        @apply grid gap-4 md:grid-cols-[minmax(0,2.3fr)_minmax(0,0.95fr)_minmax(0,0.9fr)_minmax(220px,1.25fr)];
+    }
+
+    .recipe-item-cost {
+        @apply text-sm;
+        color: var(--pf-text-soft);
+    }
+
+    .recipe-item-cost-head {
+        @apply text-center font-semibold;
+        color: var(--pf-text);
+    }
+
+    .recipe-item-cost-values {
+        @apply mt-1 flex items-center justify-center gap-4 whitespace-nowrap;
+    }
+
     .button-primary {
         @apply inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold shadow-sm transition duration-200 ease-out;
         background: var(--pf-primary);
@@ -525,5 +561,146 @@
     .welcome-copy {
         @apply mt-5 max-w-2xl text-base leading-8;
         color: var(--pf-text-soft);
+    }
+
+    .marketing-link {
+        @apply text-sm font-medium transition duration-200 ease-out;
+        color: var(--pf-text-soft);
+    }
+
+    .marketing-link:hover {
+        color: var(--pf-primary);
+    }
+
+    .calculator-page-shell {
+        @apply mx-auto max-w-7xl px-6 py-12 lg:px-10 lg:py-16;
+    }
+
+    .calculator-hero-grid {
+        @apply grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center;
+    }
+
+    .calculator-main-grid {
+        @apply grid gap-6 lg:grid-cols-[0.98fr_1.02fr] lg:items-start;
+    }
+
+    .calculator-result-stack {
+        @apply space-y-4;
+    }
+
+    .calculator-result-column {
+        @apply lg:sticky lg:top-24;
+    }
+
+    .calculator-highlight {
+        @apply rounded-[24px] border p-5;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        border-color: var(--pf-border);
+    }
+
+    .calculator-hero-card {
+        @apply rounded-[32px] border p-8 shadow-[var(--pf-shadow)];
+        background:
+            radial-gradient(circle at top right, rgba(37, 99, 235, 0.10), transparent 38%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 251, 255, 0.94) 100%);
+        border-color: rgba(37, 99, 235, 0.10);
+    }
+
+    .feature-card {
+        @apply rounded-[28px] border p-6 shadow-[var(--pf-shadow)];
+        background: rgba(255, 255, 255, 0.96);
+        border-color: rgba(37, 99, 235, 0.08);
+    }
+
+    .cta-band {
+        @apply rounded-[32px] border p-8 text-center shadow-[var(--pf-shadow)];
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(245, 158, 11, 0.10) 100%);
+        border-color: rgba(37, 99, 235, 0.12);
+    }
+
+    .seo-copy {
+        @apply text-sm leading-7;
+        color: var(--pf-text-soft);
+    }
+
+    .calculator-result-hero {
+        @apply rounded-[28px] border p-6;
+        background:
+            radial-gradient(circle at top right, rgba(245, 158, 11, 0.18), transparent 30%),
+            linear-gradient(135deg, #1f4fd1 0%, #2563eb 52%, #1d4ed8 100%);
+        border-color: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 26px 56px rgba(37, 99, 235, 0.22);
+    }
+
+    .calculator-metrics-grid {
+        @apply grid gap-4 sm:grid-cols-2;
+    }
+
+    .calculator-summary {
+        @apply rounded-[24px] border p-5;
+        background: rgba(248, 250, 252, 0.9);
+        border-color: var(--pf-border);
+    }
+
+    .calculator-summary-row {
+        @apply flex items-center justify-between gap-3 py-3 text-sm;
+        color: var(--pf-text-soft);
+    }
+
+    .calculator-summary-row + .calculator-summary-row {
+        border-top: 1px solid rgba(229, 231, 235, 0.9);
+    }
+
+    .metric-value-xl {
+        @apply text-4xl font-semibold leading-none sm:text-[2.8rem];
+        color: #ffffff;
+        letter-spacing: -0.03em;
+    }
+
+    .metric-value-lg {
+        @apply text-2xl font-semibold leading-tight;
+        color: var(--pf-text);
+        letter-spacing: -0.03em;
+    }
+
+    .field-grid-tight {
+        @apply grid gap-4 md:grid-cols-2;
+    }
+
+    .field-block {
+        @apply space-y-1.5;
+    }
+
+    .field-help {
+        @apply text-xs leading-5;
+        color: var(--pf-text-soft);
+    }
+
+    .feature-badge {
+        @apply inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
+        background: rgba(37, 99, 235, 0.08);
+        color: var(--pf-primary);
+    }
+
+    .calculator-form-panel {
+        @apply rounded-[32px] border p-6 shadow-[var(--pf-shadow)];
+        background: rgba(255, 255, 255, 0.97);
+        border-color: rgba(37, 99, 235, 0.08);
+    }
+
+    .calculator-form-footer {
+        @apply flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between;
+        border-color: rgba(226, 232, 240, 0.9);
+    }
+
+    .calculator-mini-stat {
+        @apply rounded-[22px] border p-4;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        border-color: rgba(37, 99, 235, 0.08);
+    }
+
+    .calculator-hero-orb {
+        @apply absolute -right-10 -top-10 h-40 w-40 rounded-full blur-3xl;
+        background: rgba(37, 99, 235, 0.12);
     }
 }

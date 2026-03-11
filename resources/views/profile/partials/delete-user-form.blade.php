@@ -18,7 +18,7 @@
             @csrf
             @method('delete')
 
-            <h2 class="text-xl font-semibold" style="color: var(--pf-text);">
+            <h2 class="text-lg font-semibold" style="color: var(--pf-text);">
                 {{ __('Are you sure you want to delete your account?') }}
             </h2>
 
@@ -28,7 +28,7 @@
 
             <div class="mt-6">
                 <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
-                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full sm:w-3/4" placeholder="{{ __('Password') }}" />
+                <x-password-input id="password" name="password" class="mt-1 block w-full sm:w-3/4" placeholder="{{ __('Password') }}" />
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
             </div>
 

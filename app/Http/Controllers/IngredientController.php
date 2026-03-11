@@ -20,10 +20,12 @@ class IngredientController extends Controller
 
     public function index(Request $request): View
     {
-        $ingredients = $this->ingredientRepository->getByCompany((int) $request->user()->company_id);
+        $search = trim((string) $request->query('search', ''));
+        $ingredients = $this->ingredientRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
 
         return view('ingredients.index', [
             'ingredients' => $ingredients,
+            'search' => $search,
         ]);
     }
 

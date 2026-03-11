@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Configuração da empresa</p>
-            <h2 class="page-title">Defina a base global da precificação.</h2>
+            <!-- <h2 class="page-title">Defina a base global da precificação.</h2> -->
             <p class="page-subtitle">Essas configurações ajudam a manter o padrão comercial da empresa e servem de referência para os próximos ajustes do cálculo.</p>
         </div>
     </x-slot>

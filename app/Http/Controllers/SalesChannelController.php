@@ -20,10 +20,12 @@ class SalesChannelController extends Controller
 
     public function index(Request $request): View
     {
-        $salesChannels = $this->salesChannelRepository->getByCompany((int) $request->user()->company_id);
+        $search = trim((string) $request->query('search', ''));
+        $salesChannels = $this->salesChannelRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
 
         return view('sales-channels.index', [
             'salesChannels' => $salesChannels,
+            'search' => $search,
         ]);
     }
 

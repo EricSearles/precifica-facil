@@ -21,7 +21,13 @@ class CompanyFormatter
 
     public function money(float|int|string|null $value, ?Company $company = null): string
     {
-        return number_format((float) $value, $this->decimalPlaces($company), ',', '.');
+        $formatted = number_format((float) $value, $this->decimalPlaces($company), ',', '.');
+        $currency = strtoupper((string) ($company?->setting?->currency ?? 'BRL'));
+
+        return match ($currency) {
+            'BRL' => 'R$ '.$formatted,
+            default => $formatted,
+        };
     }
 
     public function fromSetting(?Setting $setting, float $value): float

@@ -28,14 +28,24 @@
 
         <div>
             <x-input-label for="password" :value="__('Senha')" />
-            <x-text-input id="password" class="mt-1 block w-full" type="password" name="password" required autocomplete="new-password" />
+            <x-password-input id="password" class="mt-1 block w-full" name="password" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <div>
             <x-input-label for="password_confirmation" :value="__('Confirmar senha')" />
-            <x-text-input id="password_confirmation" class="mt-1 block w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+            <x-password-input id="password_confirmation" class="mt-1 block w-full" name="password_confirmation" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div>
+            <label class="inline-flex items-start gap-3 text-sm" style="color: var(--pf-text-soft);">
+                <input type="checkbox" name="terms" value="1" class="mt-1 rounded border-slate-300 text-teal-700 shadow-sm focus:ring-teal-500" @checked(old('terms'))>
+                <span>
+                    Li e aceito os <a href="{{ route('terms') }}" class="auth-link" target="_blank" rel="noopener noreferrer">Termos de Uso</a> e o <a href="{{ route('data-usage') }}" class="auth-link" target="_blank" rel="noopener noreferrer">Uso de Dados</a>.
+                </span>
+            </label>
+            <x-input-error :messages="$errors->get('terms')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-between gap-4 pt-2">

@@ -30,10 +30,12 @@ class ProductController extends Controller
 
     public function index(Request $request): View
     {
-        $products = $this->productRepository->getByCompany((int) $request->user()->company_id);
+        $search = trim((string) $request->query('search', ''));
+        $products = $this->productRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
 
         return view('products.index', [
             'products' => $products,
+            'search' => $search,
         ]);
     }
 

@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Centro de produção</p>
-            <h2 class="page-title">Receitas com custos, composição e preço sugerido.</h2>
+            <!-- <h2 class="page-title">Receitas com custos, composição e preço sugerido.</h2> -->
             <p class="page-subtitle">Acompanhe cada receita com clareza visual, incluindo o reflexo do preço base nos canais de venda vinculados ao produto.</p>
         </div>
 
@@ -26,7 +26,18 @@
                     <h3 class="table-title">Receitas estruturadas</h3>
                     <p class="table-description">Visão consolidada do custo, rendimento, preço sugerido e canais do produto.</p>
                 </div>
-                <span class="badge-neutral">{{ $recipes->count() }} registro(s)</span>
+                <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
+                    <form method="GET" action="{{ route('recipes.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar receita" class="block w-full sm:w-64">
+                        <div class="flex items-center gap-2">
+                            <button type="submit" class="button-secondary">Buscar</button>
+                            @if ($search !== '')
+                                <a href="{{ route('recipes.index') }}" class="button-secondary">Limpar</a>
+                            @endif
+                        </div>
+                    </form>
+                    <span class="badge-neutral">{{ $recipes->total() }} registro(s)</span>
+                </div>
             </div>
 
             @if ($recipes->isEmpty())
@@ -88,6 +99,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                </div>
+                <div class="border-t px-6 py-4" style="border-color: var(--pf-border);">
+                    {{ $recipes->links() }}
                 </div>
             @endif
         </section>

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'company_id',
         'role',
         'is_owner',
+        'terms_accepted_at',
     ];
 
     /**
@@ -40,6 +41,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_owner' => 'boolean',
+            'terms_accepted_at' => 'datetime',
         ];
     }
 

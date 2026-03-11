@@ -100,11 +100,11 @@
         <div class="grid gap-4 md:grid-cols-2">
             <div class="surface-card bg-slate-50/80 shadow-none">
                 <p class="metric-label">Custo calculado</p>
-                <p class="mt-3 text-xl font-semibold text-slate-950">@money((float) $product->calculated_unit_cost, $product->company)</p>
+                <p class="mt-3 text-lg font-semibold text-slate-950">@money((float) $product->calculated_unit_cost, $product->company)</p>
             </div>
             <div class="surface-card bg-slate-50/80 shadow-none">
                 <p class="metric-label">Preço sugerido</p>
-                <p class="mt-3 text-xl font-semibold text-slate-950">@money((float) $product->suggested_sale_price, $product->company)</p>
+                <p class="mt-3 text-lg font-semibold text-slate-950">@money((float) $product->suggested_sale_price, $product->company)</p>
                 @if ($product->productChannelPrices->isNotEmpty())
                     <div class="channel-price-list">
                         @foreach ($product->productChannelPrices->take(3) as $channelPrice)
