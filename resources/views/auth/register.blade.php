@@ -1,4 +1,10 @@
 <x-guest-layout>
+    <div class="mb-6 rounded-[24px] border px-5 py-4" style="border-color: rgba(37, 99, 235, 0.14); background: rgba(239, 246, 255, 0.9);">
+        <p class="page-kicker">Período de teste</p>
+        <h2 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Crie sua conta e teste o sistema por 14 dias.</h2>
+        <p class="mt-2 text-sm leading-6" style="color: var(--pf-text-soft);">Durante o teste você pode cadastrar ingredientes, receitas, embalagens, produtos e canais de venda normalmente.</p>
+    </div>
+
     <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 
@@ -54,7 +60,7 @@
             </a>
 
             <x-primary-button>
-                {{ __('Criar conta') }}
+                {{ __('Criar conta e iniciar teste') }}
             </x-primary-button>
         </div>
     </form>

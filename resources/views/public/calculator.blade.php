@@ -30,7 +30,7 @@
             <a href="{{ route('terms') }}" class="marketing-link">Termos de Uso</a>
             <a href="{{ route('data-usage') }}" class="marketing-link">Uso de Dados</a>
             <a href="{{ route('login') }}" class="button-secondary">Entrar</a>
-            <a href="{{ route('register') }}" class="button-primary">Criar conta grátis</a>
+            <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
         </div>
     </header>
 
@@ -44,8 +44,14 @@
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('register') }}" class="button-primary">Criar conta grátis</a>
+                    <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
                     <a href="{{ route('login') }}" class="button-secondary">Entrar</a>
+                </div>
+
+                <div class="calculator-benefits-inline">
+                    <span class="calculator-benefit-pill">Sem planilhas</span>
+                    <span class="calculator-benefit-pill">Ideal para doces e marmitas</span>
+                    <span class="calculator-benefit-pill">Simulação instantânea</span>
                 </div>
 
                 <div class="mt-8 max-w-3xl space-y-4">
@@ -186,9 +192,9 @@
                 <article class="surface-card">
                     <p class="page-kicker">Próximo passo</p>
                     <h3 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Quer salvar esse cálculo, organizar receitas e controlar seus custos?</h3>
-                    <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Crie sua conta e continue com cadastro de ingredientes, receitas, embalagens e canais de venda dentro do sistema completo.</p>
+                    <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Crie sua conta, inicie seu teste de 14 dias e continue com cadastro de ingredientes, receitas, embalagens e canais de venda dentro do sistema completo.</p>
                     <div class="mt-6 flex flex-wrap gap-3">
-                        <a href="{{ route('register') }}" class="button-primary">Criar conta grátis</a>
+                        <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
                         <a href="{{ route('login') }}" class="button-secondary">Entrar</a>
                     </div>
                 </article>
@@ -243,18 +249,10 @@
                         </div>
                     </div>
 
-                    <div class="field-grid-tight">
-                        <div class="field-block">
-                            <x-input-label for="public_profit_margin_percentage" :value="__('Margem %')" />
-                            <x-text-input id="public_profit_margin_percentage" x-model="form.profit_margin_percentage" @input="queueRefresh" type="number" step="0.01" min="0" class="mt-1 block w-full" placeholder="100" />
-                            <p class="field-help">A margem define o ganho desejado sobre o custo unitário.</p>
-                        </div>
-
-                        <div class="field-block">
-                            <x-input-label for="public_channel_percentage_rate" :value="__('Taxa do canal (%)')" />
-                            <x-text-input id="public_channel_percentage_rate" x-model="form.channel_percentage_rate" @input="queueRefresh" type="number" step="0.01" min="0" max="99.99" class="mt-1 block w-full" placeholder="12" />
-                            <p class="field-help">Deixe em branco para venda direta sem comissão.</p>
-                        </div>
+                    <div class="field-block">
+                        <x-input-label for="public_profit_margin_percentage" :value="__('Margem %')" />
+                        <x-text-input id="public_profit_margin_percentage" x-model="form.profit_margin_percentage" @input="queueRefresh" type="number" step="0.01" min="0" class="mt-1 block w-full" placeholder="100" />
+                        <p class="field-help">A margem define o ganho desejado sobre o custo unitário.</p>
                     </div>
 
                     <div class="field-block">
@@ -263,12 +261,20 @@
                         <p class="field-help">Serve para nomear a simulação e deixar o resultado mais claro.</p>
                     </div>
 
+                    <div class="field-grid-tight">
+                        <div class="field-block">
+                            <x-input-label for="public_channel_percentage_rate" :value="__('Taxa do canal (%)')" />
+                            <x-text-input id="public_channel_percentage_rate" x-model="form.channel_percentage_rate" @input="queueRefresh" type="number" step="0.01" min="0" max="99.99" class="mt-1 block w-full" placeholder="12" />
+                            <p class="field-help">Deixe em branco para venda direta sem comissão.</p>
+                        </div>
+                    </div>
+
                     <div class="calculator-form-footer">
                         <div class="text-sm" style="color: var(--pf-text-soft);">
                             <span x-text="result ? 'Quantidade simulada: ' + quantity(result.yield_quantity) + ' unidade(s)' : 'Preencha os campos para simular.'"></span>
                         </div>
                         <div class="flex flex-wrap gap-3">
-                            <a href="{{ route('register') }}" class="button-primary">Criar conta grátis</a>
+                            <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
                             <button
                                 type="button"
                                 class="button-secondary"
@@ -319,9 +325,9 @@
         <section class="mt-12 cta-band">
             <p class="page-kicker">Comece agora</p>
             <h2 class="mt-3 text-3xl font-semibold" style="color: var(--pf-text);">Comece grátis e organize sua precificação</h2>
-            <p class="mx-auto mt-4 max-w-2xl text-sm leading-7" style="color: var(--pf-text-soft);">Use a calculadora para simular o preço de venda e, quando quiser avançar, entre no sistema para salvar cálculos, receitas e custos da sua operação.</p>
+            <p class="mx-auto mt-4 max-w-2xl text-sm leading-7" style="color: var(--pf-text-soft);">Use a calculadora para simular o preço de venda e, quando quiser avançar, entre no sistema com 14 dias de teste para salvar cálculos, receitas e custos da sua operação.</p>
             <div class="mt-6 flex flex-wrap justify-center gap-3">
-                <a href="{{ route('register') }}" class="button-primary">Criar conta grátis</a>
+                <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
                 <a href="{{ route('login') }}" class="button-secondary">Entrar</a>
             </div>
         </section>

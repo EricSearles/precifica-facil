@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 class Company extends Model
 {
@@ -80,5 +81,28 @@ class Company extends Model
     public function setting(): HasOne
     {
         return $this->hasOne(Setting::class);
+    }
+
+    public function onTrial(): bool
+    {
+        return $this->plan === 'trial'
+            && $this->trial_ends_at instanceof Carbon
+            && $this->trial_ends_at->isFuture();
+    }
+
+    public function trialExpired(): bool
+    {
+        return $this->plan === 'trial'
+            && $this->trial_ends_at instanceof Carbon
+            && $this->trial_ends_at->isPast();
+    }
+
+    public function trialDaysLeft(): int
+    {
+        if (! $this->trial_ends_at instanceof Carbon) {
+            return 0;
+        }
+
+        return max(0, now()->startOfDay()->diffInDays($this->trial_ends_at->copy()->startOfDay(), false));
     }
 }

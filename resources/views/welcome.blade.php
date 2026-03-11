@@ -47,10 +47,14 @@
                 @auth
                 <a href="{{ route('dashboard') }}" class="button-primary">Ir para o dashboard</a>
                 @else
-                <a href="{{ route('register') }}" class="button-primary">Comecar agora</a>
+                <a href="{{ route('register') }}" class="button-primary">Comecar teste gratis</a>
                 <a href="{{ route('login') }}" class="button-secondary">Ja tenho conta</a>
                 @endauth
             </div>
+
+            @guest
+            <p class="mt-4 text-sm" style="color: var(--pf-text-soft);">Teste gratis por 14 dias para montar receitas, precificar produtos e organizar canais de venda.</p>
+            @endguest
 
             <div class="mt-5 flex flex-wrap gap-4 text-sm" style="color: var(--pf-text-soft);">
                 <a href="{{ route('terms') }}" class="auth-link">Termos de Uso</a>
