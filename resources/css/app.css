@@ -698,26 +698,44 @@
         @apply relative mt-1;
     }
 
-    .input-prefix,
-    .input-suffix {
-        @apply pointer-events-none absolute inset-y-0 flex items-center text-sm font-semibold;
+    .input-shell {
+        @apply mt-1 flex h-12 items-center overflow-hidden rounded-2xl border bg-white shadow-sm transition duration-200 ease-out;
+        border-color: var(--pf-border);
+    }
+
+    .input-shell:focus-within {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .input-addon {
+        @apply flex h-full items-center px-4 text-sm font-semibold;
         color: #64748b;
     }
 
-    .input-prefix {
-        @apply left-4;
+    .input-shell-control {
+        @apply h-full min-w-0 flex-1 border-0 bg-transparent px-0 py-0 text-sm shadow-none focus:ring-0;
+        color: var(--pf-text);
+        appearance: textfield;
+        -webkit-appearance: none;
+        box-shadow: none !important;
+        border: 0 !important;
+        background: transparent !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
-    .input-suffix {
-        @apply right-4;
+    .input-shell-control:focus {
+        box-shadow: none;
     }
 
-    .input-with-prefix {
-        @apply pl-11;
+    .input-shell-control::-webkit-outer-spin-button,
+    .input-shell-control::-webkit-inner-spin-button {
+        margin: 0;
     }
 
-    .input-with-suffix {
-        @apply pr-10;
+    .input-shell-control::placeholder {
+        color: var(--pf-text-soft);
     }
 
     .feature-badge {

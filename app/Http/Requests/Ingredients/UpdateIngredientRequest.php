@@ -29,6 +29,8 @@ class UpdateIngredientRequest extends FormRequest
             'purchase_unit' => ['required', 'string', 'max:20'],
             'purchase_quantity' => ['required', 'numeric', 'gt:0'],
             'purchase_price' => ['required', 'numeric', 'gte:0'],
+            'content_quantity' => ['nullable', 'numeric', 'gt:0'],
+            'content_unit' => ['nullable', 'string', 'max:20'],
             'base_unit' => ['nullable', 'string', 'max:20'],
             'base_quantity' => ['nullable', 'numeric', 'gt:0'],
             'notes' => ['nullable', 'string'],

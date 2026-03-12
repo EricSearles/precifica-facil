@@ -103,5 +103,105 @@ window.publicQuickCalculator = function (config = {}) {
     };
 };
 
+window.ingredientConversionForm = function (config = {}) {
+    return {
+        purchaseUnit: config.purchaseUnit ?? '',
+        purchaseQuantity: config.purchaseQuantity ?? '',
+        contentUnit: config.contentUnit ?? '',
+        contentQuantity: config.contentQuantity ?? '',
+        baseUnit: config.baseUnit ?? '',
+        baseQuantity: config.baseQuantity ?? '',
+        units: {
+            un: { family: 'count', factor: 1 },
+            g: { family: 'weight', factor: 1 },
+            kg: { family: 'weight', factor: 1000 },
+            ml: { family: 'volume', factor: 1 },
+            l: { family: 'volume', factor: 1000 },
+        },
+
+        init() {
+            this.refreshBaseQuantity();
+            this.$watch('purchaseUnit', () => this.refreshBaseQuantity());
+            this.$watch('purchaseQuantity', () => this.refreshBaseQuantity());
+            this.$watch('contentUnit', () => this.refreshBaseQuantity());
+            this.$watch('contentQuantity', () => this.refreshBaseQuantity());
+            this.$watch('baseUnit', () => this.refreshBaseQuantity());
+        },
+
+        refreshBaseQuantity() {
+            if (!this.baseUnit || this.purchaseQuantity === '') {
+                this.baseQuantity = '';
+                return;
+            }
+
+            const baseDefinition = this.units[this.baseUnit];
+            const purchaseDefinition = this.units[this.purchaseUnit];
+            const contentDefinition = this.units[this.contentUnit];
+            const purchaseQuantity = Number(this.purchaseQuantity);
+            const contentQuantity = Number(this.contentQuantity);
+
+            if (!baseDefinition || !Number.isFinite(purchaseQuantity) || purchaseQuantity <= 0) {
+                this.baseQuantity = '';
+                return;
+            }
+
+            let equivalentQuantity = null;
+
+            if (
+                contentDefinition &&
+                Number.isFinite(contentQuantity) &&
+                contentQuantity > 0 &&
+                contentDefinition.family === baseDefinition.family
+            ) {
+                equivalentQuantity = ((purchaseQuantity * contentQuantity) * contentDefinition.factor) / baseDefinition.factor;
+            } else if (
+                purchaseDefinition &&
+                purchaseDefinition.family === baseDefinition.family
+            ) {
+                equivalentQuantity = (purchaseQuantity * purchaseDefinition.factor) / baseDefinition.factor;
+            }
+
+            if (equivalentQuantity === null) {
+                this.baseQuantity = '';
+                return;
+            }
+
+            this.baseQuantity = Number.isInteger(equivalentQuantity)
+                ? String(equivalentQuantity)
+                : equivalentQuantity.toFixed(2).replace(/\.?0+$/, '');
+        },
+
+        conversionHint() {
+            if (!this.baseUnit || this.baseQuantity === '') {
+                return '';
+            }
+
+            const purchaseQuantity = Number(this.purchaseQuantity);
+            const contentQuantity = Number(this.contentQuantity);
+
+            if (!Number.isFinite(purchaseQuantity) || purchaseQuantity <= 0) {
+                return '';
+            }
+
+            if (this.contentUnit && Number.isFinite(contentQuantity) && contentQuantity > 0) {
+                return `${this.purchaseQuantity} ${this.purchaseUnit.toUpperCase()} com ${this.contentQuantity} ${this.contentUnit.toUpperCase()} cada equivalem a ${this.baseQuantity} ${this.baseUnit.toUpperCase()}.`;
+            }
+
+            return `${this.purchaseQuantity} ${this.purchaseUnit.toUpperCase()} equivalem a ${this.baseQuantity} ${this.baseUnit.toUpperCase()}.`;
+        },
+
+        needsContentDefinition() {
+            if (!this.purchaseUnit || !this.baseUnit) {
+                return false;
+            }
+
+            const purchaseDefinition = this.units[this.purchaseUnit];
+            const baseDefinition = this.units[this.baseUnit];
+
+            return !purchaseDefinition || !baseDefinition || purchaseDefinition.family !== baseDefinition.family;
+        },
+    };
+};
+
 Alpine.start();
 

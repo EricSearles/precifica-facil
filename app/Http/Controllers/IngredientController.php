@@ -6,6 +6,7 @@ use App\Http\Requests\Ingredients\StoreIngredientRequest;
 use App\Http\Requests\Ingredients\UpdateIngredientRequest;
 use App\Repositories\IngredientRepository;
 use App\Services\IngredientService;
+use InvalidArgumentException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -36,7 +37,13 @@ class IngredientController extends Controller
 
     public function store(StoreIngredientRequest $request): RedirectResponse
     {
-        $this->ingredientService->create($request->validated(), (int) $request->user()->company_id);
+        try {
+            $this->ingredientService->create($request->validated(), (int) $request->user()->company_id);
+        } catch (InvalidArgumentException $exception) {
+            return back()
+                ->withInput()
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()
             ->route('ingredients.index')
@@ -60,7 +67,13 @@ class IngredientController extends Controller
 
         abort_if(! $ingredientModel, 404);
 
-        $this->ingredientService->update($ingredientModel, $request->validated());
+        try {
+            $this->ingredientService->update($ingredientModel, $request->validated());
+        } catch (InvalidArgumentException $exception) {
+            return back()
+                ->withInput()
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()
             ->route('ingredients.index')
