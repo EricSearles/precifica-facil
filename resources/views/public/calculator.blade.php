@@ -105,8 +105,122 @@
             class="mt-12 calculator-main-grid"
             x-data="publicQuickCalculator(@js($calculatorDefaults))"
         >
+            <article class="calculator-form-panel calculator-form-column">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="page-kicker">Calculadora rápida</p>
+                        <h2 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Simule um preço de venda sem abrir cadastro.</h2>
+                        <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Preencha os campos e acompanhe o cálculo em tempo real. A taxa do canal é opcional e serve para delivery, aplicativo ou marketplace.</p>
+                    </div>
+                    <span class="badge-accent">Sem login</span>
+                </div>
+
+                <div class="mt-6" x-show="error" x-cloak>
+                    <div class="flash-error" x-text="error"></div>
+                </div>
+
+                <div class="mt-8 space-y-5">
+                    <div class="field-block">
+                        <x-input-label for="public_product_name" :value="__('Nome da receita/produto')" />
+                        <div class="input-chrome">
+                            <x-text-input id="public_product_name" x-model="form.product_name" @input="queueRefresh" type="text" class="block w-full" placeholder="Ex.: Brigadeiro gourmet" />
+                        </div>
+                        <p class="field-help">Use o nome que o cliente vê no cardápio ou no app.</p>
+                    </div>
+
+                    <div class="form-section-divider">
+                        <p class="form-section-kicker">Custos Base</p>
+                    </div>
+
+                    <div class="field-grid-tight">
+                        <div class="field-block">
+                            <x-input-label for="public_recipe_total_cost" :value="__('Custo total da receita')" />
+                            <div class="input-chrome">
+                                <span class="input-prefix">R$</span>
+                                <x-text-input id="public_recipe_total_cost" x-model="form.recipe_total_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-prefix" placeholder="40,00" />
+                            </div>
+                            <p class="field-help">Soma dos ingredientes ou do lote completo.</p>
+                        </div>
+
+                        <div class="field-block">
+                            <x-input-label for="public_yield_quantity" :value="__('Quantidade produzida')" />
+                            <div class="input-chrome">
+                                <x-text-input id="public_yield_quantity" x-model="form.yield_quantity" @input="queueRefresh" type="number" step="0.01" min="0.01" class="block w-full" placeholder="10" />
+                            </div>
+                            <p class="field-help">Quantas unidades essa receita gera.</p>
+                        </div>
+                    </div>
+
+                    <div class="field-grid-tight">
+                        <div class="field-block">
+                            <x-input-label for="public_packaging_unit_cost" :value="__('Embalagem por unidade')" />
+                            <div class="input-chrome">
+                                <span class="input-prefix">R$</span>
+                                <x-text-input id="public_packaging_unit_cost" x-model="form.packaging_unit_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-prefix" placeholder="0,80" />
+                            </div>
+                            <p class="field-help">Informe somente o valor unitário da embalagem.</p>
+                        </div>
+
+                        <div class="field-block">
+                            <x-input-label for="public_other_costs" :value="__('Outros custos')" />
+                            <div class="input-chrome">
+                                <span class="input-prefix">R$</span>
+                                <x-text-input id="public_other_costs" x-model="form.other_costs" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-prefix" placeholder="5,00" />
+                            </div>
+                            <p class="field-help">Gás, perda, etiqueta ou qualquer extra do lote.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-section-divider">
+                        <p class="form-section-kicker">Margem e Canal</p>
+                    </div>
+
+                    <div class="field-block">
+                        <x-input-label for="public_profit_margin_percentage" :value="__('Margem %')" />
+                        <div class="input-chrome">
+                            <x-text-input id="public_profit_margin_percentage" x-model="form.profit_margin_percentage" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-suffix" placeholder="100" />
+                            <span class="input-suffix">%</span>
+                        </div>
+                        <p class="field-help">A margem define o ganho desejado sobre o custo unitário.</p>
+                    </div>
+
+                    <div class="field-block">
+                        <x-input-label for="public_sales_channel_name" :value="__('Canal de venda')" />
+                        <div class="input-chrome">
+                            <x-text-input id="public_sales_channel_name" x-model="form.sales_channel_name" @input="queueRefresh" type="text" class="block w-full" placeholder="Ex.: iFood" />
+                        </div>
+                        <p class="field-help">Serve para nomear a simulação e deixar o resultado mais claro.</p>
+                    </div>
+
+                    <div class="field-block">
+                        <x-input-label for="public_channel_percentage_rate" :value="__('Taxa do canal %')" />
+                        <div class="input-chrome">
+                            <x-text-input id="public_channel_percentage_rate" x-model="form.channel_percentage_rate" @input="queueRefresh" type="number" step="0.01" min="0" max="99.99" class="block w-full input-with-suffix" placeholder="12" />
+                            <span class="input-suffix">%</span>
+                        </div>
+                        <p class="field-help">Deixe em branco para venda direta sem comissão.</p>
+                    </div>
+
+                    <div class="calculator-form-footer">
+                        <div class="text-sm" style="color: var(--pf-text-soft);">
+                            <span x-text="result ? 'Quantidade simulada: ' + quantity(result.yield_quantity) + ' unidade(s)' : 'Preencha os campos para simular.'"></span>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
+                            <button
+                                type="button"
+                                class="button-secondary"
+                                @click="form = { product_name: '', recipe_total_cost: '', yield_quantity: '', packaging_unit_cost: '', other_costs: '', profit_margin_percentage: 100, sales_channel_name: '', channel_percentage_rate: '' }; refresh();"
+                            >
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
             <div class="calculator-result-stack calculator-result-column">
-                <article class="surface-card-strong">
+                <article class="surface-card-strong backdrop-blur-sm" style="background: rgba(255,255,255,0.94); border-color: rgba(226,232,240,0.88); box-shadow: 0 20px 45px rgba(15,23,42,0.08);">
                     <div class="flex items-start justify-between gap-4">
                         <div>
                             <p class="page-kicker">Resultado</p>
@@ -139,6 +253,16 @@
                                 <p class="text-xs font-semibold uppercase tracking-[0.22em] text-white/70">Preço sugerido final</p>
                                 <p class="mt-3 metric-value-xl" x-text="money(result?.suggested_price)"></p>
                                 <p class="mt-3 text-sm leading-6 text-white/78" x-text="result?.sales_channel_name ? 'Valor final ajustado para manter seu líquido mesmo com a taxa do canal.' : 'Valor final para venda direta, sem taxa adicional.'"></p>
+                            </div>
+
+                            <div class="margin-health mt-7">
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Saúde da margem</p>
+                                    <span class="text-sm font-semibold text-white/90" x-text="((result?.profit_margin_percentage ?? form.profit_margin_percentage) >= 80) ? 'Saudável' : 'Atenção'"></span>
+                                </div>
+                                <div class="margin-health-bar">
+                                    <div class="margin-health-progress" :style="`width: ${Math.min(Number(result?.profit_margin_percentage ?? form.profit_margin_percentage || 0), 100)}%`"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -189,7 +313,7 @@
                     </div>
                 </article>
 
-                <article class="surface-card">
+                <article class="surface-card backdrop-blur-sm" style="background: rgba(255,255,255,0.92); border-color: rgba(226,232,240,0.88); box-shadow: 0 12px 30px rgba(15,23,42,0.06);">
                     <p class="page-kicker">Próximo passo</p>
                     <h3 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Quer salvar esse cálculo, organizar receitas e controlar seus custos?</h3>
                     <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Crie sua conta, inicie seu teste de 14 dias e continue com cadastro de ingredientes, receitas, embalagens e canais de venda dentro do sistema completo.</p>
@@ -199,93 +323,6 @@
                     </div>
                 </article>
             </div>
-
-            <article class="calculator-form-panel">
-                <div class="flex items-start justify-between gap-4">
-                    <div>
-                        <p class="page-kicker">Calculadora rápida</p>
-                        <h2 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Simule um preço de venda sem abrir cadastro.</h2>
-                        <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Preencha os campos e acompanhe o cálculo em tempo real. A taxa do canal é opcional e serve para delivery, aplicativo ou marketplace.</p>
-                    </div>
-                    <span class="badge-accent">Sem login</span>
-                </div>
-
-                <div class="mt-6" x-show="error" x-cloak>
-                    <div class="flash-error" x-text="error"></div>
-                </div>
-
-                <div class="mt-8 space-y-4">
-                    <div class="field-block">
-                        <x-input-label for="public_product_name" :value="__('Nome da receita/produto')" />
-                        <x-text-input id="public_product_name" x-model="form.product_name" @input="queueRefresh" type="text" class="mt-1 block w-full" placeholder="Ex.: Brigadeiro gourmet" />
-                        <p class="field-help">Use o nome que o cliente vê no cardápio ou no app.</p>
-                    </div>
-
-                    <div class="field-grid-tight">
-                        <div class="field-block">
-                            <x-input-label for="public_recipe_total_cost" :value="__('Custo total da receita')" />
-                            <x-text-input id="public_recipe_total_cost" x-model="form.recipe_total_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="mt-1 block w-full" placeholder="40,00" />
-                            <p class="field-help">Soma dos ingredientes ou do lote completo.</p>
-                        </div>
-
-                        <div class="field-block">
-                            <x-input-label for="public_yield_quantity" :value="__('Quantidade produzida')" />
-                            <x-text-input id="public_yield_quantity" x-model="form.yield_quantity" @input="queueRefresh" type="number" step="0.01" min="0.01" class="mt-1 block w-full" placeholder="10" />
-                            <p class="field-help">Quantas unidades essa receita gera.</p>
-                        </div>
-                    </div>
-
-                    <div class="field-grid-tight">
-                        <div class="field-block">
-                            <x-input-label for="public_packaging_unit_cost" :value="__('Embalagem por unidade')" />
-                            <x-text-input id="public_packaging_unit_cost" x-model="form.packaging_unit_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="mt-1 block w-full" placeholder="0,80" />
-                            <p class="field-help">Informe somente o valor unitário da embalagem.</p>
-                        </div>
-
-                        <div class="field-block">
-                            <x-input-label for="public_other_costs" :value="__('Outros custos')" />
-                            <x-text-input id="public_other_costs" x-model="form.other_costs" @input="queueRefresh" type="number" step="0.01" min="0" class="mt-1 block w-full" placeholder="5,00" />
-                            <p class="field-help">Gás, perda, etiqueta ou qualquer extra do lote.</p>
-                        </div>
-                    </div>
-
-                    <div class="field-block">
-                        <x-input-label for="public_profit_margin_percentage" :value="__('Margem %')" />
-                        <x-text-input id="public_profit_margin_percentage" x-model="form.profit_margin_percentage" @input="queueRefresh" type="number" step="0.01" min="0" class="mt-1 block w-full" placeholder="100" />
-                        <p class="field-help">A margem define o ganho desejado sobre o custo unitário.</p>
-                    </div>
-
-                    <div class="field-block">
-                        <x-input-label for="public_sales_channel_name" :value="__('Canal de venda (opcional)')" />
-                        <x-text-input id="public_sales_channel_name" x-model="form.sales_channel_name" @input="queueRefresh" type="text" class="mt-1 block w-full" placeholder="Ex.: iFood" />
-                        <p class="field-help">Serve para nomear a simulação e deixar o resultado mais claro.</p>
-                    </div>
-
-                    <div class="field-grid-tight">
-                        <div class="field-block">
-                            <x-input-label for="public_channel_percentage_rate" :value="__('Taxa do canal (%)')" />
-                            <x-text-input id="public_channel_percentage_rate" x-model="form.channel_percentage_rate" @input="queueRefresh" type="number" step="0.01" min="0" max="99.99" class="mt-1 block w-full" placeholder="12" />
-                            <p class="field-help">Deixe em branco para venda direta sem comissão.</p>
-                        </div>
-                    </div>
-
-                    <div class="calculator-form-footer">
-                        <div class="text-sm" style="color: var(--pf-text-soft);">
-                            <span x-text="result ? 'Quantidade simulada: ' + quantity(result.yield_quantity) + ' unidade(s)' : 'Preencha os campos para simular.'"></span>
-                        </div>
-                        <div class="flex flex-wrap gap-3">
-                            <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
-                            <button
-                                type="button"
-                                class="button-secondary"
-                                @click="form = { product_name: '', recipe_total_cost: '', yield_quantity: '', packaging_unit_cost: '', other_costs: '', profit_margin_percentage: 100, sales_channel_name: '', channel_percentage_rate: '' }; refresh();"
-                            >
-                                Limpar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </article>
         </section>
 
         <section class="mt-12">
