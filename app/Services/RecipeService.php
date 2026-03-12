@@ -54,15 +54,19 @@ class RecipeService
 
         foreach ($recipe->items as $item) {
             $ingredient = $item->ingredient;
-            $unitCost = $ingredient
-                ? $this->ingredientCostService->calculateUnitCost($ingredient)
-                : 0.0;
+            $costBreakdown = $ingredient
+                ? $this->ingredientCostService->calculateCostForUsage(
+                    $ingredient,
+                    (float) $item->quantity_used,
+                    (string) $item->unit_used,
+                )
+                : ['unit_cost' => 0.0, 'total_cost' => 0.0];
 
-            $item->unit_cost_snapshot = $this->companyFormatter->roundMoney($unitCost, $recipe->company);
-            $item->total_cost = $this->companyFormatter->roundMoney(
-                (float) $item->unit_cost_snapshot * (float) $item->quantity_used,
+            $item->unit_cost_snapshot = $this->companyFormatter->roundMoney(
+                (float) $costBreakdown['unit_cost'],
                 $recipe->company,
             );
+            $item->total_cost = $this->companyFormatter->roundMoney((float) $costBreakdown['total_cost'], $recipe->company);
             $item->save();
 
             $ingredientsCostTotal += (float) $item->total_cost;

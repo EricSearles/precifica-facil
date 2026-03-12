@@ -9,6 +9,7 @@ use App\Repositories\RecipeRepository;
 use App\Services\RecipeItemService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 class RecipeItemController extends Controller
 {
@@ -25,7 +26,13 @@ class RecipeItemController extends Controller
 
         abort_if(! $recipe, 404);
 
-        $this->recipeItemService->create($request->validated(), (int) $request->user()->company_id);
+        try {
+            $this->recipeItemService->create($request->validated(), (int) $request->user()->company_id);
+        } catch (InvalidArgumentException $exception) {
+            return redirect()
+                ->route('recipes.show', $recipe->id)
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()
             ->route('recipes.show', $recipe->id)
@@ -39,7 +46,13 @@ class RecipeItemController extends Controller
 
         abort_if(! $recipeItemModel, 404);
 
-        $this->recipeItemService->update($recipeItemModel, $request->validated(), $companyId);
+        try {
+            $this->recipeItemService->update($recipeItemModel, $request->validated(), $companyId);
+        } catch (InvalidArgumentException $exception) {
+            return redirect()
+                ->route('recipes.show', $recipeItemModel->recipe_id)
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()
             ->route('recipes.show', $recipeItemModel->recipe_id)

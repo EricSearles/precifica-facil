@@ -12,6 +12,14 @@
     </x-slot>
 
     <section class="form-section max-w-5xl">
+        @if (session('success'))
+            <div class="flash-success mb-6">{{ session('success') }}</div>
+        @endif
+
+        @if (session('error'))
+            <div class="flash-error mb-6">{{ session('error') }}</div>
+        @endif
+
         <div class="mb-6">
             <h3 class="form-section-title">Ficha do ingrediente</h3>
             <p class="form-section-subtitle">Informe unidade de compra, unidade base e preço para automatizar o custo unitário.</p>

@@ -72,17 +72,17 @@
 
                     <div class="mt-6 grid gap-4 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
                         <div class="rounded-[24px] border p-4" style="border-color: rgba(37, 99, 235, 0.08); background: rgba(255,255,255,0.92);">
-                            <p class="metric-label">1</p>
+                            <!-- <p class="metric-label">1</p> -->
                             <p class="mt-2 text-base font-semibold" style="color: var(--pf-text);">Custo unitário real</p>
                             <p class="mt-2 text-sm leading-6" style="color: var(--pf-text-soft);">Receita, embalagem e extras distribuídos por unidade.</p>
                         </div>
                         <div class="rounded-[24px] border p-4" style="border-color: rgba(37, 99, 235, 0.08); background: rgba(255,255,255,0.92);">
-                            <p class="metric-label">2</p>
+                            <!-- <p class="metric-label">2</p> -->
                             <p class="mt-2 text-base font-semibold" style="color: var(--pf-text);">Preço base sugerido</p>
                             <p class="mt-2 text-sm leading-6" style="color: var(--pf-text-soft);">Margem aplicada sobre o custo de cada unidade.</p>
                         </div>
                         <div class="rounded-[24px] border p-4" style="border-color: rgba(37, 99, 235, 0.08); background: rgba(255,255,255,0.92);">
-                            <p class="metric-label">3</p>
+                            <!-- <p class="metric-label">3</p> -->
                             <p class="mt-2 text-base font-semibold" style="color: var(--pf-text);">Preço final por canal</p>
                             <p class="mt-2 text-sm leading-6" style="color: var(--pf-text-soft);">Ajuste automático para delivery, app ou marketplace.</p>
                         </div>
@@ -112,7 +112,7 @@
                         <h2 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Simule um preço de venda sem abrir cadastro.</h2>
                         <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Preencha os campos e acompanhe o cálculo em tempo real. A taxa do canal é opcional e serve para delivery, aplicativo ou marketplace.</p>
                     </div>
-                    <span class="badge-accent">Sem login</span>
+                    <!-- <span class="badge-accent">Sem login</span> -->
                 </div>
 
                 <div class="mt-6" x-show="error" x-cloak>
@@ -135,9 +135,9 @@
                     <div class="field-grid-tight">
                         <div class="field-block">
                             <x-input-label for="public_recipe_total_cost" :value="__('Custo total da receita')" />
-                            <div class="input-chrome">
-                                <span class="input-prefix">R$</span>
-                                <x-text-input id="public_recipe_total_cost" x-model="form.recipe_total_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-prefix" placeholder="40,00" />
+                            <div class="input-shell">
+                                <span class="input-addon">R$</span>
+                                <input id="public_recipe_total_cost" x-model="form.recipe_total_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="input-shell-control" placeholder="40,00" />
                             </div>
                             <p class="field-help">Soma dos ingredientes ou do lote completo.</p>
                         </div>
@@ -154,18 +154,18 @@
                     <div class="field-grid-tight">
                         <div class="field-block">
                             <x-input-label for="public_packaging_unit_cost" :value="__('Embalagem por unidade')" />
-                            <div class="input-chrome">
-                                <span class="input-prefix">R$</span>
-                                <x-text-input id="public_packaging_unit_cost" x-model="form.packaging_unit_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-prefix" placeholder="0,80" />
+                            <div class="input-shell">
+                                <span class="input-addon">R$</span>
+                                <input id="public_packaging_unit_cost" x-model="form.packaging_unit_cost" @input="queueRefresh" type="number" step="0.01" min="0" class="input-shell-control" placeholder="0,80" />
                             </div>
                             <p class="field-help">Informe somente o valor unitário da embalagem.</p>
                         </div>
 
                         <div class="field-block">
                             <x-input-label for="public_other_costs" :value="__('Outros custos')" />
-                            <div class="input-chrome">
-                                <span class="input-prefix">R$</span>
-                                <x-text-input id="public_other_costs" x-model="form.other_costs" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-prefix" placeholder="5,00" />
+                            <div class="input-shell">
+                                <span class="input-addon">R$</span>
+                                <input id="public_other_costs" x-model="form.other_costs" @input="queueRefresh" type="number" step="0.01" min="0" class="input-shell-control" placeholder="5,00" />
                             </div>
                             <p class="field-help">Gás, perda, etiqueta ou qualquer extra do lote.</p>
                         </div>
@@ -177,9 +177,9 @@
 
                     <div class="field-block">
                         <x-input-label for="public_profit_margin_percentage" :value="__('Margem %')" />
-                        <div class="input-chrome">
-                            <x-text-input id="public_profit_margin_percentage" x-model="form.profit_margin_percentage" @input="queueRefresh" type="number" step="0.01" min="0" class="block w-full input-with-suffix" placeholder="100" />
-                            <span class="input-suffix">%</span>
+                        <div class="input-shell">
+                            <input id="public_profit_margin_percentage" x-model="form.profit_margin_percentage" @input="queueRefresh" type="number" step="0.01" min="0" class="input-shell-control px-4" placeholder="100" />
+                            <span class="input-addon">%</span>
                         </div>
                         <p class="field-help">A margem define o ganho desejado sobre o custo unitário.</p>
                     </div>
@@ -194,9 +194,9 @@
 
                     <div class="field-block">
                         <x-input-label for="public_channel_percentage_rate" :value="__('Taxa do canal %')" />
-                        <div class="input-chrome">
-                            <x-text-input id="public_channel_percentage_rate" x-model="form.channel_percentage_rate" @input="queueRefresh" type="number" step="0.01" min="0" max="99.99" class="block w-full input-with-suffix" placeholder="12" />
-                            <span class="input-suffix">%</span>
+                        <div class="input-shell">
+                            <input id="public_channel_percentage_rate" x-model="form.channel_percentage_rate" @input="queueRefresh" type="number" step="0.01" min="0" max="99.99" class="input-shell-control px-4" placeholder="12" />
+                            <span class="input-addon">%</span>
                         </div>
                         <p class="field-help">Deixe em branco para venda direta sem comissão.</p>
                     </div>
@@ -232,7 +232,7 @@
                             <span class="badge-neutral">Atualizando</span>
                         </template>
                         <template x-if="!loading && result">
-                            <span class="badge-success">Cálculo pronto</span>
+                            <!-- <span class="badge-success">Cálculo pronto</span> -->
                         </template>
                         <template x-if="!loading && !result">
                             <span class="badge-neutral">Preencha os campos</span>

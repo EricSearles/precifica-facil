@@ -10,23 +10,28 @@ class IngredientService
     public function __construct(
         protected IngredientRepository $ingredientRepository,
         protected IngredientCostService $ingredientCostService,
+        protected UnitConversionService $unitConversionService,
     ) {
     }
 
     public function create(array $data, int $companyId): Ingredient
     {
+        $normalizedData = $this->normalizeConversionData($data);
+
         $ingredient = $this->ingredientRepository->create([
             'company_id' => $companyId,
-            'name' => $data['name'],
-            'brand' => $data['brand'] ?? null,
-            'purchase_unit' => $data['purchase_unit'],
-            'purchase_quantity' => $data['purchase_quantity'],
-            'purchase_price' => $data['purchase_price'],
-            'base_unit' => $data['base_unit'] ?? null,
-            'base_quantity' => $data['base_quantity'] ?? null,
+            'name' => $normalizedData['name'],
+            'brand' => $normalizedData['brand'] ?? null,
+            'purchase_unit' => $normalizedData['purchase_unit'],
+            'purchase_quantity' => $normalizedData['purchase_quantity'],
+            'purchase_price' => $normalizedData['purchase_price'],
+            'content_quantity' => $normalizedData['content_quantity'] ?? null,
+            'content_unit' => $normalizedData['content_unit'] ?? null,
+            'base_unit' => $normalizedData['base_unit'] ?? null,
+            'base_quantity' => $normalizedData['base_quantity'] ?? null,
             'unit_cost' => 0,
-            'notes' => $data['notes'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
+            'notes' => $normalizedData['notes'] ?? null,
+            'is_active' => $normalizedData['is_active'] ?? true,
         ]);
 
         $ingredient->unit_cost = $this->ingredientCostService->calculateUnitCost($ingredient);
@@ -36,15 +41,19 @@ class IngredientService
 
     public function update(Ingredient $ingredient, array $data): Ingredient
     {
-        $ingredient->name = $data['name'];
-        $ingredient->brand = $data['brand'] ?? null;
-        $ingredient->purchase_unit = $data['purchase_unit'];
-        $ingredient->purchase_quantity = $data['purchase_quantity'];
-        $ingredient->purchase_price = $data['purchase_price'];
-        $ingredient->base_unit = $data['base_unit'] ?? null;
-        $ingredient->base_quantity = $data['base_quantity'] ?? null;
-        $ingredient->notes = $data['notes'] ?? null;
-        $ingredient->is_active = $data['is_active'] ?? false;
+        $normalizedData = $this->normalizeConversionData($data);
+
+        $ingredient->name = $normalizedData['name'];
+        $ingredient->brand = $normalizedData['brand'] ?? null;
+        $ingredient->purchase_unit = $normalizedData['purchase_unit'];
+        $ingredient->purchase_quantity = $normalizedData['purchase_quantity'];
+        $ingredient->purchase_price = $normalizedData['purchase_price'];
+        $ingredient->content_quantity = $normalizedData['content_quantity'] ?? null;
+        $ingredient->content_unit = $normalizedData['content_unit'] ?? null;
+        $ingredient->base_unit = $normalizedData['base_unit'] ?? null;
+        $ingredient->base_quantity = $normalizedData['base_quantity'] ?? null;
+        $ingredient->notes = $normalizedData['notes'] ?? null;
+        $ingredient->is_active = $normalizedData['is_active'] ?? false;
         $ingredient->unit_cost = $this->ingredientCostService->calculateUnitCost($ingredient);
 
         return $this->ingredientRepository->save($ingredient);
@@ -53,5 +62,24 @@ class IngredientService
     public function delete(Ingredient $ingredient): void
     {
         $this->ingredientRepository->delete($ingredient);
+    }
+
+    protected function normalizeConversionData(array $data): array
+    {
+        $purchaseUnit = $this->unitConversionService->normalize($data['purchase_unit'] ?? null);
+        $contentUnit = $this->unitConversionService->normalize($data['content_unit'] ?? null);
+        $baseUnit = $this->unitConversionService->normalize($data['base_unit'] ?? null);
+        $purchaseQuantity = isset($data['purchase_quantity']) ? (float) $data['purchase_quantity'] : 0;
+        $contentQuantity = isset($data['content_quantity']) && $data['content_quantity'] !== '' ? (float) $data['content_quantity'] : 0;
+
+        if ($contentUnit !== null && $baseUnit !== null && $purchaseQuantity > 0 && $contentQuantity > 0 && $this->unitConversionService->canConvert($contentUnit, $baseUnit)) {
+            $data['base_quantity'] = $this->unitConversionService->convert($purchaseQuantity * $contentQuantity, $contentUnit, $baseUnit);
+        } elseif ($purchaseUnit !== null && $baseUnit !== null && $purchaseQuantity > 0 && $this->unitConversionService->canConvert($purchaseUnit, $baseUnit)) {
+            $data['base_quantity'] = $this->unitConversionService->convert($purchaseQuantity, $purchaseUnit, $baseUnit);
+        } else {
+            $data['base_quantity'] = null;
+        }
+
+        return $data;
     }
 }

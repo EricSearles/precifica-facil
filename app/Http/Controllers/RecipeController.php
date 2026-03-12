@@ -8,10 +8,12 @@ use App\Repositories\ProductRepository;
 use App\Repositories\RecipeRepository;
 use App\Services\RecipeCrudService;
 use App\Services\RecipeService;
+use App\Services\UnitConversionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use InvalidArgumentException;
 
 class RecipeController extends Controller
 {
@@ -56,12 +58,15 @@ class RecipeController extends Controller
     {
         $companyId = (int) $request->user()->company_id;
         $recipeModel = $this->recipeRepository->findWithItems($recipe, $companyId);
+        $ingredients = app(\App\Repositories\IngredientRepository::class)->getByCompany($companyId);
 
         abort_if(! $recipeModel, 404);
 
         return view('recipes.show', [
             'recipe' => $recipeModel,
-            'ingredients' => app(\App\Repositories\IngredientRepository::class)->getByCompany($companyId),
+            'ingredients' => $ingredients,
+            'ingredientUnitOptions' => app(UnitConversionService::class)
+                ->compatibleUnitsForIngredientMap($ingredients),
         ]);
     }
 
@@ -107,7 +112,19 @@ class RecipeController extends Controller
     public function recalculate(Request $request, int $recipe): RedirectResponse|JsonResponse
     {
         $companyId = (int) $request->user()->company_id;
-        $updatedRecipe = $this->recipeService->recalculateAndUpdate($recipe, $companyId);
+        try {
+            $updatedRecipe = $this->recipeService->recalculateAndUpdate($recipe, $companyId);
+        } catch (InvalidArgumentException $exception) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $exception->getMessage(),
+                ], 422);
+            }
+
+            return redirect()
+                ->route('recipes.show', $recipe)
+                ->with('error', $exception->getMessage());
+        }
 
         if (! $updatedRecipe) {
             if ($request->expectsJson()) {

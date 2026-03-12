@@ -20,6 +20,15 @@
 
     @php
         $units = ['un', 'g', 'kg', 'ml', 'l'];
+        $popularConversions = [
+            ['measure' => 'Colher de chá', 'ml' => '5 ML', 'g' => '4,5 G a 5,5 G'],
+            ['measure' => 'Colher de sopa', 'ml' => '15 ML', 'g' => '13,5 G a 16,5 G'],
+            ['measure' => 'Xícara de chá', 'ml' => '240 ML', 'g' => '216 G a 264 G'],
+            ['measure' => 'Copo americano', 'ml' => '190 ML', 'g' => '171 G a 209 G'],
+            ['measure' => 'Copo de requeijão', 'ml' => '250 ML', 'g' => '225 G a 275 G'],
+            ['measure' => 'Pitada', 'ml' => '-', 'g' => '1 G a 2 G'],
+            ['measure' => 'Punhado', 'ml' => '-', 'g' => '30 G a 40 G'],
+        ];
     @endphp
 
     <div class="page-shell">
@@ -66,16 +75,18 @@
                     <div class="form-section">
                         <div class="border-b pb-4" style="border-color: var(--pf-border);">
                             <h3 class="form-section-title">Adicionar ingrediente</h3>
-                            <p class="form-section-subtitle">Inclua os insumos que compoem a receita e mantenha o custo atualizado.</p>
+                            <p class="form-section-subtitle">Inclua os insumos que compoem a receita e mantenha o custo atualizado. O sistema converte automaticamente a unidade usada na receita para calcular o valor correto do item.</p>
                         </div>
-                        <form method="POST" action="{{ route('recipe-items.store') }}" class="mt-6 grid gap-4 md:grid-cols-4">
+                        <form method="POST" action="{{ route('recipe-items.store') }}" class="mt-6 grid gap-4 md:grid-cols-4" x-data="{ unitOptions: @js($ingredientUnitOptions), selectedIngredient: '{{ old('ingredient_id', '') }}', selectedUnit: '{{ old('unit_used', '') }}' }">
+                            <div x-effect="if (selectedIngredient && !(unitOptions[selectedIngredient] || []).includes(selectedUnit)) { selectedUnit = (unitOptions[selectedIngredient] || [])[0] || ''; }" class="hidden"></div>
                             @csrf
                             <input type="hidden" name="recipe_id" value="{{ $recipe->id }}">
                             <div class="md:col-span-2">
                                 <x-input-label for="ingredient_id" :value="__('Ingrediente')" />
-                                <select id="ingredient_id" name="ingredient_id" class="mt-1 block w-full">
+                                <select id="ingredient_id" name="ingredient_id" class="mt-1 block w-full" x-model="selectedIngredient">
+                                    <option value="">Selecione...</option>
                                     @foreach ($ingredients as $ingredient)
-                                        <option value="{{ $ingredient->id }}">{{ $ingredient->name }}</option>
+                                        <option value="{{ $ingredient->id }}" @selected((string) old('ingredient_id') === (string) $ingredient->id)>{{ $ingredient->name }}</option>
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('ingredient_id')" class="mt-2" />
@@ -87,10 +98,11 @@
                             </div>
                             <div>
                                 <x-input-label for="unit_used" :value="__('Unidade')" />
-                                <select id="unit_used" name="unit_used" class="mt-1 block w-full">
-                                    @foreach ($units as $unit)
-                                        <option value="{{ $unit }}" @selected(old('unit_used', 'un') === $unit)>{{ strtoupper($unit) }}</option>
-                                    @endforeach
+                                <select id="unit_used" name="unit_used" class="mt-1 block w-full" x-model="selectedUnit">
+                                    <option value="">Selecione...</option>
+                                    <template x-for="unit in (unitOptions[selectedIngredient] || [])" :key="unit">
+                                        <option :value="unit" x-text="unit.toUpperCase()"></option>
+                                    </template>
                                 </select>
                                 <x-input-error :messages="$errors->get('unit_used')" class="mt-2" />
                             </div>
@@ -98,6 +110,44 @@
                                 <button type="submit" class="button-primary">Adicionar item</button>
                             </div>
                         </form>
+                    </div>
+
+                    <div class="surface-card" x-data="{ openConversions: false }">
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between gap-4 text-left"
+                            @click="openConversions = !openConversions"
+                        >
+                            <div>
+                                <h3 class="form-section-title">Conversão de medidas</h3>
+                                <p class="form-section-subtitle">Tabela rápida para medidas culinárias populares.</p>
+                            </div>
+                            <span class="badge-neutral" x-text="openConversions ? 'Ocultar' : 'Mostrar'"></span>
+                        </button>
+
+                        <div x-show="openConversions" x-cloak class="mt-4 space-y-3">
+                            <div class="overflow-x-auto rounded-[20px] border" style="border-color: var(--pf-border);">
+                                <table class="data-table min-w-[560px]">
+                                    <thead>
+                                        <tr>
+                                            <th>Medida</th>
+                                            <th>ML</th>
+                                            <th>G</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($popularConversions as $conversion)
+                                            <tr>
+                                                <td class="font-medium" style="color: var(--pf-text);">{{ $conversion['measure'] }}</td>
+                                                <td class="font-semibold" style="color: var(--pf-text);">{{ $conversion['ml'] }}</td>
+                                                <td class="font-semibold" style="color: var(--pf-text);">{{ $conversion['g'] }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs" style="color: var(--pf-text-soft);">As equivalências em gramas variam conforme densidade e tipo do ingrediente. Use esta tabela como referência prática e prefira pesar quando precisar de maior precisão.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -124,6 +174,7 @@
                             @endif
                         </div>
                     @endif
+
                 </div>
             </div>
 
@@ -139,13 +190,14 @@
                             @else
                                 <div class="space-y-4">
                                     @foreach ($recipe->items as $item)
-                                        <form method="POST" action="{{ route('recipe-items.update', $item->id) }}" class="rounded-[24px] border p-4" style="border-color: var(--pf-border); background: #fbfdff;">
+                                        <form method="POST" action="{{ route('recipe-items.update', $item->id) }}" class="rounded-[24px] border p-4" style="border-color: var(--pf-border); background: #fbfdff;" x-data="{ unitOptions: @js($ingredientUnitOptions), selectedIngredient: '{{ $item->ingredient_id }}', selectedUnit: '{{ $item->unit_used }}' }">
+                                            <div x-effect="if (selectedIngredient && !(unitOptions[selectedIngredient] || []).includes(selectedUnit)) { selectedUnit = (unitOptions[selectedIngredient] || [])[0] || ''; }" class="hidden"></div>
                                             @csrf
                                             @method('PUT')
                                             <div class="grid gap-4 md:grid-cols-5">
                                                 <div class="md:col-span-2">
                                                     <x-input-label :value="__('Ingrediente')" />
-                                                    <select name="ingredient_id" class="mt-1 block w-full">
+                                                    <select name="ingredient_id" class="mt-1 block w-full" x-model="selectedIngredient">
                                                         @foreach ($ingredients as $ingredient)
                                                             <option value="{{ $ingredient->id }}" @selected($item->ingredient_id === $ingredient->id)>{{ $ingredient->name }}</option>
                                                         @endforeach
@@ -157,10 +209,10 @@
                                                 </div>
                                                 <div>
                                                     <x-input-label :value="__('Unidade')" />
-                                                    <select name="unit_used" class="mt-1 block w-full">
-                                                        @foreach ($units as $unit)
-                                                            <option value="{{ $unit }}" @selected($item->unit_used === $unit)>{{ strtoupper($unit) }}</option>
-                                                        @endforeach
+                                                    <select name="unit_used" class="mt-1 block w-full" x-model="selectedUnit">
+                                                        <template x-for="unit in (unitOptions[selectedIngredient] || [])" :key="unit">
+                                                            <option :value="unit" x-text="unit.toUpperCase()"></option>
+                                                        </template>
                                                     </select>
                                                 </div>
                                                 <div class="text-sm" style="color: var(--pf-text-soft);">

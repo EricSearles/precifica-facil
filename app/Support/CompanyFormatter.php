@@ -30,6 +30,17 @@ class CompanyFormatter
         };
     }
 
+    public function moneyWithDecimals(float|int|string|null $value, int $decimals, ?Company $company = null): string
+    {
+        $formatted = number_format((float) $value, max(0, min(6, $decimals)), ',', '.');
+        $currency = strtoupper((string) ($company?->setting?->currency ?? 'BRL'));
+
+        return match ($currency) {
+            'BRL' => 'R$ '.$formatted,
+            default => $formatted,
+        };
+    }
+
     public function fromSetting(?Setting $setting, float $value): float
     {
         $places = is_numeric($setting?->decimal_places) ? max(0, min(4, (int) $setting->decimal_places)) : 2;

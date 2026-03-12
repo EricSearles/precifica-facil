@@ -15,6 +15,8 @@ class Ingredient extends Model
         'purchase_unit',
         'purchase_quantity',
         'purchase_price',
+        'content_quantity',
+        'content_unit',
         'base_unit',
         'base_quantity',
         'unit_cost',
@@ -25,8 +27,9 @@ class Ingredient extends Model
     protected $casts = [
         'purchase_quantity' => 'decimal:2',
         'purchase_price' => 'decimal:2',
+        'content_quantity' => 'decimal:3',
         'base_quantity' => 'decimal:2',
-        'unit_cost' => 'decimal:2',
+        'unit_cost' => 'decimal:6',
         'is_active' => 'boolean',
     ];
 

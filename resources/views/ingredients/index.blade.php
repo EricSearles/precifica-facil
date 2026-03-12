@@ -48,7 +48,7 @@
                             <tr>
                                 <th>Ingrediente</th>
                                 <th>Compra</th>
-                                <th>Unidade base</th>
+                                <th>Conversão para receita</th>
                                 <th>Custo unitário</th>
                                 <th>Status</th>
                                 <th class="table-actions-head">Ações</th>
@@ -56,6 +56,11 @@
                         </thead>
                         <tbody>
                             @foreach ($ingredients as $ingredient)
+                                @php
+                                    $ingredientUnitCost = (float) $ingredient->unit_cost;
+                                    $ingredientReferenceUnit = strtoupper($ingredient->base_unit ?: $ingredient->content_unit ?: $ingredient->purchase_unit);
+                                    $ingredientUnitCostDecimals = $ingredientUnitCost > 0 && $ingredientUnitCost < 0.1 ? 4 : 2;
+                                @endphp
                                 <tr>
                                     <td>
                                         <div class="entity-title">{{ $ingredient->name }}</div>
@@ -64,11 +69,17 @@
                                     <td>
                                         {{ $ingredient->purchase_quantity }} {{ strtoupper($ingredient->purchase_unit) }}<br>
                                         <span class="entity-meta">@money((float) $ingredient->purchase_price, $ingredient->company)</span>
+                                        @if ($ingredient->content_quantity && $ingredient->content_unit)
+                                            <div class="entity-meta">Conteúdo: {{ $ingredient->content_quantity }} {{ strtoupper($ingredient->content_unit) }} por {{ strtoupper($ingredient->purchase_unit) }}</div>
+                                        @endif
                                     </td>
                                     <td>
                                         {{ $ingredient->base_quantity ?: '-' }} {{ strtoupper($ingredient->base_unit ?: '') }}
                                     </td>
-                                    <td class="font-semibold text-slate-900">@money((float) $ingredient->unit_cost, $ingredient->company)</td>
+                                    <td>
+                                        <div class="font-semibold text-slate-900">{{ app(\App\Support\CompanyFormatter::class)->moneyWithDecimals($ingredientUnitCost, $ingredientUnitCostDecimals, $ingredient->company) }}</div>
+                                        <div class="entity-meta">por {{ $ingredientReferenceUnit }}</div>
+                                    </td>
                                     <td>
                                         <span class="{{ $ingredient->is_active ? 'badge-success' : 'badge-neutral' }}">{{ $ingredient->is_active ? 'Ativo' : 'Inativo' }}</span>
                                     </td>
