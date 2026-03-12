@@ -84,7 +84,7 @@
     }
 
     .mobile-sidebar-shell {
-        @apply fixed inset-y-0 left-0 z-50 w-[304px] border-r px-5 py-5 transition-transform duration-300 ease-out lg:hidden;
+        @apply fixed inset-y-0 left-0 z-50 w-[304px] overflow-y-auto border-r px-5 py-5 transition-transform duration-300 ease-out lg:hidden;
         background: linear-gradient(180deg, #243447 0%, var(--pf-sidebar) 100%);
         border-color: rgba(255, 255, 255, 0.08);
         box-shadow: 24px 0 60px rgba(15, 23, 42, 0.24);
@@ -98,7 +98,7 @@
     }
 
     .sidebar-panel {
-        @apply flex h-full flex-col rounded-[28px] border p-4 backdrop-blur-xl;
+        @apply flex h-full flex-col overflow-y-auto rounded-[28px] border p-4 backdrop-blur-xl;
         border-color: rgba(255, 255, 255, 0.08);
         background: rgba(255, 255, 255, 0.03);
     }

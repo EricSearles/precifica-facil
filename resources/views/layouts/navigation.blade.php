@@ -47,7 +47,7 @@ $navItems = [
             @endforeach
         </div>
 
-        <div class="mt-auto rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
+        <div class="mt-6 rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
             <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessao</p>
             <div class="mt-4">
                 <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
@@ -123,7 +123,7 @@ $navItems = [
             @endforeach
         </div>
 
-        <div class="mt-auto rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
+        <div class="mt-6 rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
             <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessao</p>
             <div class="mt-4">
                 <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
