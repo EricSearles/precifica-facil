@@ -63,9 +63,9 @@
     textarea:focus,
     input:focus {
         @apply outline-none ring-2 ring-offset-0;
-        border-color: var(--pf-primary);
-        --tw-ring-color: rgba(37, 99, 235, 0.18);
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+        border-color: #2563eb;
+        --tw-ring-color: rgba(37, 99, 235, 0.16);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
     }
 
     input[type='checkbox'],
@@ -581,7 +581,7 @@
     }
 
     .calculator-main-grid {
-        @apply grid gap-8 lg:grid-cols-[0.97fr_1.03fr] lg:items-start;
+        @apply grid gap-8 lg:grid-cols-12 lg:items-start;
     }
 
     .calculator-result-stack {
@@ -589,7 +589,11 @@
     }
 
     .calculator-result-column {
-        @apply lg:sticky lg:top-24;
+        @apply lg:col-span-5 lg:sticky lg:top-6;
+    }
+
+    .calculator-form-column {
+        @apply lg:col-span-7;
     }
 
     .calculator-highlight {
@@ -599,7 +603,7 @@
     }
 
     .calculator-hero-card {
-        @apply rounded-[32px] border p-8;
+        @apply rounded-[32px] border p-8 backdrop-blur-md;
         background:
             radial-gradient(circle at top right, rgba(37, 99, 235, 0.10), transparent 38%),
             linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(247, 250, 255, 0.96) 100%);
@@ -608,7 +612,7 @@
     }
 
     .feature-card {
-        @apply rounded-[28px] border p-6;
+        @apply rounded-[28px] border p-6 backdrop-blur-sm;
         background: rgba(255, 255, 255, 0.96);
         border-color: rgba(226, 232, 240, 0.96);
         box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
@@ -627,10 +631,10 @@
     }
 
     .calculator-result-hero {
-        @apply rounded-[28px] border p-6;
+        @apply rounded-[30px] border p-7;
         background:
-            radial-gradient(circle at top right, rgba(245, 158, 11, 0.18), transparent 30%),
-            linear-gradient(135deg, #1f4fd1 0%, #2563eb 52%, #1d4ed8 100%);
+            radial-gradient(circle at top right, rgba(245, 158, 11, 0.18), transparent 28%),
+            linear-gradient(135deg, #102a6b 0%, #1d4ed8 54%, #2563eb 100%);
         border-color: rgba(255, 255, 255, 0.12);
         box-shadow: 0 26px 56px rgba(37, 99, 235, 0.22);
     }
@@ -656,7 +660,7 @@
     }
 
     .metric-value-xl {
-        @apply text-4xl font-semibold leading-none sm:text-[2.8rem];
+        @apply text-4xl font-extrabold leading-none sm:text-[3rem];
         color: #ffffff;
         letter-spacing: -0.03em;
     }
@@ -671,6 +675,16 @@
         @apply grid gap-4 md:grid-cols-2;
     }
 
+    .form-section-divider {
+        @apply border-t pt-5;
+        border-color: rgba(226, 232, 240, 0.9);
+    }
+
+    .form-section-kicker {
+        @apply text-[11px] font-semibold uppercase tracking-[0.22em];
+        color: #64748b;
+    }
+
     .field-block {
         @apply space-y-1.5;
     }
@@ -680,6 +694,32 @@
         color: #64748b;
     }
 
+    .input-chrome {
+        @apply relative mt-1;
+    }
+
+    .input-prefix,
+    .input-suffix {
+        @apply pointer-events-none absolute inset-y-0 flex items-center text-sm font-semibold;
+        color: #64748b;
+    }
+
+    .input-prefix {
+        @apply left-4;
+    }
+
+    .input-suffix {
+        @apply right-4;
+    }
+
+    .input-with-prefix {
+        @apply pl-11;
+    }
+
+    .input-with-suffix {
+        @apply pr-10;
+    }
+
     .feature-badge {
         @apply inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
         background: rgba(37, 99, 235, 0.08);
@@ -687,9 +727,9 @@
     }
 
     .calculator-form-panel {
-        @apply rounded-[32px] border p-6;
-        background: rgba(255, 255, 255, 0.97);
-        border-color: rgba(226, 232, 240, 0.96);
+        @apply rounded-[32px] border p-7 backdrop-blur-md;
+        background: rgba(255, 255, 255, 0.94);
+        border-color: rgba(226, 232, 240, 0.88);
         box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
     }
 
@@ -699,9 +739,9 @@
     }
 
     .calculator-mini-stat {
-        @apply rounded-[22px] border p-4;
-        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-        border-color: rgba(226, 232, 240, 0.96);
+        @apply rounded-[22px] border p-5 backdrop-blur-sm;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 251, 255, 0.96) 100%);
+        border-color: rgba(226, 232, 240, 0.88);
         box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
     }
 
@@ -720,5 +760,20 @@
         border: 1px solid rgba(226, 232, 240, 0.96);
         color: #0f172a;
         box-shadow: 0 12px 30px rgba(15, 23, 42, 0.04);
+    }
+
+    .margin-health {
+        @apply rounded-[22px] border p-4;
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .margin-health-bar {
+        @apply mt-3 h-2.5 overflow-hidden rounded-full bg-white/20;
+    }
+
+    .margin-health-progress {
+        @apply h-full rounded-full;
+        background: linear-gradient(90deg, #f59e0b 0%, #10b981 100%);
     }
 }
