@@ -14,15 +14,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
+<body class="welcome-shell">
     <div class="auth-shell">
-        <div class="auth-brand">
-            <a href="/" class="brand-mark">
-                <x-application-logo class="h-6 w-6 fill-current text-white" />
+        <div class="auth-brand brand-stack">
+            <a href="/" class="brand-image-link">
+                <img src="{{ asset('images/logo-serales-pequeno.png') }}" alt="Serales" class="brand-image">
             </a>
-            <div>
-                <!-- <div class="brand-badge">Sistema de precificação</div> -->
-                <h1 class="mt-3 text-lg font-semibold" style="color: var(--pf-text);">Precifica Fácil</h1>
+            <div class="brand-copy">
+                <div class="brand-badge">Sistema de precificação</div>
+                <h1 class="brand-title">Precifica Fácil</h1>
                 <p class="auth-muted mt-1">Sistema de gestão e precificação para pequenos negocios de alimentacao.</p>
             </div>
         </div>
