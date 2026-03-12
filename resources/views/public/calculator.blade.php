@@ -14,21 +14,19 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="welcome-shell">
+<body class="welcome-shell calculator-public-shell">
     <header class="welcome-nav">
-        <div class="flex items-center gap-4">
-            <a href="{{ url('/') }}" class="brand-mark">
-                <x-application-logo class="h-6 w-6 fill-current text-white" />
+        <div class="calculator-brand-block">
+            <a href="{{ url('/') }}" class="calculator-brand-mark">
+                <img src="{{ asset('images/logo-serales-pequeno.png') }}" alt="Serales" class="calculator-brand-image">
             </a>
-            <div>
-                <div class="brand-badge">Calculadora pública</div>
-                <p class="mt-3 text-lg font-semibold" style="color: var(--pf-text);">Precifica Fácil</p>
+            <div class="calculator-brand-copy">
+                <div class="brand-badge calculator-brand-badge">Calculadora de preço grátis</div>
+                <p class="calculator-brand-title">Precifica Fácil</p>
             </div>
         </div>
 
         <div class="flex items-center gap-4">
-            <a href="{{ route('terms') }}" class="marketing-link">Termos de Uso</a>
-            <a href="{{ route('data-usage') }}" class="marketing-link">Uso de Dados</a>
             <a href="{{ route('login') }}" class="button-secondary">Entrar</a>
             <a href="{{ route('register') }}" class="button-primary">Teste grátis por 14 dias</a>
         </div>

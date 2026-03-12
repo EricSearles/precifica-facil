@@ -13,15 +13,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="welcome-shell">
+<body class="welcome-shell calculator-public-shell">
     <header class="welcome-nav">
-        <div class="flex items-center gap-4">
-            <span class="brand-mark">
-                <x-application-logo class="h-6 w-6 fill-current text-white" />
-            </span>
-            <div>
-                <div class="brand-badge">Sistema de precificação</div>
-                <h1 class="mt-3 text-lg font-semibold" style="color: var(--pf-text);">Precifica Fácil</h1>
+        <div class="calculator-brand-block">
+            <a href="{{ url('/') }}" class="calculator-brand-mark">
+                <img src="{{ asset('images/logo-serales-pequeno.png') }}" alt="Serales" class="calculator-brand-image">
+            </a>
+            <div class="calculator-brand-copy">
+                <div class="brand-badge calculator-brand-badge">Sistema de precificação</div>
+                <h1 class="calculator-brand-title">Precifica Fácil</h1>
             </div>
         </div>
 
@@ -84,17 +84,17 @@
             <p class="page-kicker">Fluxo recomendado</p>
             <h3 class="mt-4 text-2xl font-semibold" style="color: var(--pf-text);">Monte a base certa antes de formar o preço.</h3>
             <div class="mt-6 space-y-4">
-                <div class="channel-price-item" style="background: #eff6ff;">
+                <div class="channel-price-item welcome-flow-item">
                     <span class="channel-price-name">1. Ingredientes</span>
-                    <span class="badge-accent">Base tecnica</span>
+                    <span class="badge-neutral welcome-flow-badge">Base tecnica</span>
                 </div>
                 <div class="channel-price-item">
                     <span class="channel-price-name">2. Produtos e receitas</span>
-                    <span class="badge-neutral">Custo e margem</span>
+                    <span class="badge-neutral welcome-flow-badge">Custo e margem</span>
                 </div>
-                <div class="channel-price-item" style="background: #fff7ed;">
+                <div class="channel-price-item welcome-flow-item">
                     <span class="channel-price-name">3. Canais de venda</span>
-                    <span class="badge-warning">Taxas e preço final</span>
+                    <span class="badge-neutral welcome-flow-badge">Taxas e preço final</span>
                 </div>
             </div>
 
