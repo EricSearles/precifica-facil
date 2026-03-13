@@ -23,7 +23,7 @@
             <div class="brand-copy">
                 <div class="brand-badge">Sistema de precificação</div>
                 <h1 class="brand-title">Precifica Fácil</h1>
-                <p class="auth-muted mt-1">Sistema de gestão e precificação para pequenos negocios de alimentacao.</p>
+                <p class="auth-muted mt-1">Sistema de gestão e precificação para pequenos negócios de alimentação.</p>
             </div>
         </div>
 

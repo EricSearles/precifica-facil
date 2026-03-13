@@ -56,7 +56,7 @@
 
         <div class="flex items-center justify-between gap-4 pt-2">
             <a class="auth-link" href="{{ route('login') }}">
-                {{ __('Ja tem conta?') }}
+                {{ __('Já tem conta?') }}
             </a>
 
             <x-primary-button>

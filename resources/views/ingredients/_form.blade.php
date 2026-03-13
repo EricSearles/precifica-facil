@@ -108,7 +108,7 @@
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('base_unit')" class="mt-2" />
-                    <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Use a medida que voce realmente lança na receita.</p>
+                    <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Use a medida que você realmente lança na receita.</p>
                 </div>
 
                 <div>

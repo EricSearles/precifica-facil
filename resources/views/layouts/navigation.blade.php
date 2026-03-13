@@ -7,7 +7,7 @@ $navItems = [
 ['label' => 'Canais de venda', 'route' => 'sales-channels.index', 'match' => 'sales-channels.*'],
 ['label' => 'Produtos', 'route' => 'products.index', 'match' => 'products.*'],
 ['label' => 'Receitas', 'route' => 'recipes.index', 'match' => 'recipes.*'],
-['label' => 'Configuracoes', 'route' => 'settings.edit', 'match' => 'settings.*'],
+['label' => 'Configurações', 'route' => 'settings.edit', 'match' => 'settings.*'],
 ];
 @endphp
 
@@ -21,7 +21,7 @@ $navItems = [
                     <!-- <div class="brand-badge">Sistema de precificação</div> -->
                     <h1 class="mt-3 text-lg font-semibold text-white">Precifica Fácil</h1>
                     <p class="mt-1 text-sm leading-6" style="color: rgba(229, 231, 235, 0.82);">
-                        Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negocios de alimentacao.
+                        Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negócios de alimentação.
                     </p>
                 </div>
             </div>
@@ -48,7 +48,7 @@ $navItems = [
         </div>
 
         <div class="mt-6 rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
-            <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessao</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessão</p>
             <div class="mt-4">
                 <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
                 <p class="mt-1 text-sm" style="color: rgba(229,231,235,0.78);">{{ Auth::user()->email }}</p>
@@ -56,7 +56,7 @@ $navItems = [
 
             @if (Auth::user()->company?->onTrial() || Auth::user()->company?->trialExpired())
             <div class="mt-4 rounded-2xl border px-3 py-3 text-sm" style="border-color: rgba(255,255,255,0.08); background: rgba(37,99,235,0.16); color: #dbeafe;">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: rgba(219,234,254,0.76);">Periodo de teste</p>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: rgba(219,234,254,0.76);">Período de teste</p>
                 <p class="mt-2 font-semibold text-white">
                     @if (Auth::user()->company?->onTrial())
                     {{ Auth::user()->company->trialDaysLeft() }} dia(s) restantes
@@ -66,7 +66,7 @@ $navItems = [
                 </p>
                 <p class="mt-1 text-xs leading-5" style="color: rgba(219,234,254,0.82);">
                     @if (Auth::user()->company?->trial_ends_at)
-                    Valido ate {{ Auth::user()->company->trial_ends_at->format('d/m/Y') }}
+                    Válido até {{ Auth::user()->company->trial_ends_at->format('d/m/Y') }}
                     @endif
                 </p>
             </div>
@@ -102,7 +102,7 @@ $navItems = [
                 <div class="brand-badge">Sistema de precificação</div>
                 <h1 class="mt-3 text-lg font-semibold text-white">Precifica Fácil</h1>
                 <p class="mt-1 text-sm leading-6" style="color: rgba(229, 231, 235, 0.82);">
-                    Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negocios de alimentacao.
+                    Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negócios de alimentação.
                 </p>
             </div>
         </div>
@@ -124,7 +124,7 @@ $navItems = [
         </div>
 
         <div class="mt-6 rounded-[24px] border p-4" style="border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: var(--pf-sidebar-text);">
-            <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessao</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.22em]" style="color: rgba(229,231,235,0.58);">Sessão</p>
             <div class="mt-4">
                 <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
                 <p class="mt-1 text-sm" style="color: rgba(229,231,235,0.78);">{{ Auth::user()->email }}</p>
@@ -132,7 +132,7 @@ $navItems = [
 
             @if (Auth::user()->company?->onTrial() || Auth::user()->company?->trialExpired())
             <div class="mt-4 rounded-2xl border px-3 py-3 text-sm" style="border-color: rgba(255,255,255,0.08); background: rgba(37,99,235,0.16); color: #dbeafe;">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: rgba(219,234,254,0.76);">Periodo de teste</p>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: rgba(219,234,254,0.76);">Período de teste</p>
                 <p class="mt-2 font-semibold text-white">
                     @if (Auth::user()->company?->onTrial())
                     {{ Auth::user()->company->trialDaysLeft() }} dia(s) restantes
@@ -142,7 +142,7 @@ $navItems = [
                 </p>
                 <p class="mt-1 text-xs leading-5" style="color: rgba(219,234,254,0.82);">
                     @if (Auth::user()->company?->trial_ends_at)
-                    Valido ate {{ Auth::user()->company->trial_ends_at->format('d/m/Y') }}
+                    Válido até {{ Auth::user()->company->trial_ends_at->format('d/m/Y') }}
                     @endif
                 </p>
             </div>
