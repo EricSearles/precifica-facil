@@ -17,7 +17,7 @@
     <header class="welcome-nav">
         <div class="calculator-brand-block">
             <a href="{{ url('/') }}" class="calculator-brand-mark">
-                <img src="{{ asset('images/logo-serales-pequeno.png') }}" alt="Serales" class="calculator-brand-image">
+                <img src="{{ asset('images/logo-vazado.png') }}" alt="Serales" class="calculator-brand-image">
             </a>
             <div class="calculator-brand-copy">
                 <div class="brand-badge calculator-brand-badge">Sistema de precificação</div>
