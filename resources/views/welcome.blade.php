@@ -38,22 +38,22 @@
     <main class="welcome-hero">
         <section>
             <p class="welcome-kicker">Gestão, custo e venda no mesmo fluxo</p>
-            <h2 class="welcome-title">Precifique produtos alimenticios com clareza, velocidade e padrao profissional.</h2>
+            <h2 class="welcome-title">Precifique produtos alimentícios com clareza, velocidade e padrão profissional.</h2>
             <p class="welcome-copy">
-                O Precifica Fácil ajuda doceiras, confeiteiras, salgadeiras, marmiteiras e pequenos negocios de alimentacao a organizar ingredientes, receitas, embalagens, canais de venda e preços finais em um painel simples de operar no dia a dia.
+                O Precifica Fácil ajuda doceiras, confeiteiras, salgadeiras, marmiteiras e pequenos negócios de alimentação a organizar ingredientes, receitas, embalagens, canais de venda e preços finais em um painel simples de operar no dia a dia.
             </p>
 
             <div class="mt-8 flex flex-wrap gap-3">
                 @auth
                 <a href="{{ route('dashboard') }}" class="button-primary">Ir para o dashboard</a>
                 @else
-                <a href="{{ route('register') }}" class="button-primary">Comecar teste gratis</a>
-                <a href="{{ route('login') }}" class="button-secondary">Ja tenho conta</a>
+                <a href="{{ route('register') }}" class="button-primary">Começar teste grátis</a>
+                <a href="{{ route('login') }}" class="button-secondary">Já tenho conta</a>
                 @endauth
             </div>
 
             @guest
-            <p class="mt-4 text-sm" style="color: var(--pf-text-soft);">Teste gratis por 14 dias para montar receitas, precificar produtos e organizar canais de venda.</p>
+            <p class="mt-4 text-sm" style="color: var(--pf-text-soft);">Teste grátis por 14 dias para montar receitas, precificar produtos e organizar canais de venda.</p>
             @endguest
 
             <div class="mt-5 flex flex-wrap gap-4 text-sm" style="color: var(--pf-text-soft);">
@@ -64,18 +64,18 @@
             <div class="mt-10 grid gap-4 sm:grid-cols-3">
                 <div class="welcome-metric">
                     <p class="metric-label">Receitas</p>
-                    <p class="metric-value text-2xl">Composicao completa</p>
-                    <p class="metric-caption">Itens, custos extras e embalagem no mesmo calculo.</p>
+                    <p class="metric-value text-2xl">Composição completa</p>
+                    <p class="metric-caption">Itens, custos extras e embalagem no mesmo cálculo.</p>
                 </div>
                 <div class="welcome-metric">
                     <p class="metric-label">Canais</p>
-                    <p class="metric-value text-2xl">preço por venda</p>
-                    <p class="metric-caption">iFood, balcao, WhatsApp e outros canais com taxas proprias.</p>
+                    <p class="metric-value text-2xl">Preço por venda</p>
+                    <p class="metric-caption">iFood, balcão, WhatsApp e outros canais com taxas próprias.</p>
                 </div>
                 <div class="welcome-metric">
-                    <p class="metric-label">Operacao</p>
+                    <p class="metric-label">Operação</p>
                     <p class="metric-value text-2xl">Painel simples</p>
-                    <p class="metric-caption">Visual limpo para uso rapido mesmo por quem nao e tecnico.</p>
+                    <p class="metric-caption">Visual limpo para uso rápido mesmo por quem não é técnico.</p>
                 </div>
             </div>
         </section>
@@ -86,7 +86,7 @@
             <div class="mt-6 space-y-4">
                 <div class="channel-price-item welcome-flow-item">
                     <span class="channel-price-name">1. Ingredientes</span>
-                    <span class="badge-neutral welcome-flow-badge">Base tecnica</span>
+                    <span class="badge-neutral welcome-flow-badge">Base técnica</span>
                 </div>
                 <div class="channel-price-item">
                     <span class="channel-price-name">2. Produtos e receitas</span>
@@ -102,9 +102,9 @@
                 <p class="metric-label">O que o sistema calcula</p>
                 <ul class="mt-4 space-y-3 text-sm" style="color: var(--pf-text-soft);">
                     <li>Custo por ingrediente</li>
-                    <li>Custo total e unitario da receita</li>
-                    <li>preço sugerido do produto</li>
-                    <li>preço especifico por canal de venda</li>
+                    <li>Custo total e unitário da receita</li>
+                    <li>Preço sugerido do produto</li>
+                    <li>Preço específico por canal de venda</li>
                 </ul>
             </div>
         </aside>

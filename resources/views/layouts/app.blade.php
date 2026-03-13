@@ -24,13 +24,13 @@
                     <button type="button" class="button-secondary lg:hidden" @click="sidebarOpen = true">Menu</button>
 
                     <div class="topbar-meta">
-                        <span class="topbar-chip">Painel de gestao e formacao de preços</span>
+                        <span class="topbar-chip">Painel de gestão e formação de preços</span>
                         @if (Auth::user()->company?->onTrial())
                         <span class="topbar-chip">{{ Auth::user()->company->trialDaysLeft() }} dia(s) restantes no teste</span>
                         @elseif (Auth::user()->company?->trialExpired())
-                        <span class="topbar-chip">Periodo de teste encerrado</span>
+                        <span class="topbar-chip">Período de teste encerrado</span>
                         @endif
-                        <!-- <span class="hidden md:inline">Painel de gestao e formacao de preços</span> -->
+                    <!-- <span class="hidden md:inline">Painel de gestão e formação de preços</span> -->
                     </div>
                 </div>
 

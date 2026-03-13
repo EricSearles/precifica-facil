@@ -15,11 +15,11 @@
         <div>
             <p class="page-kicker">Painel principal</p>
             <!-- <h2 class="page-title">Acompanhe seus custos e organize a precificação da empresa.</h2> -->
-            <!-- <p class="page-subtitle">Este painel foi pensado para o uso diario: visao rápida do que ja esta estruturado e atalhos para alimentar a base do calculo sem perder tempo.</p> -->
+            <!-- <p class="page-subtitle">Este painel foi pensado para o uso diário: visão rápida do que já está estruturado e atalhos para alimentar a base do cálculo sem perder tempo.</p> -->
         </div>
 
         <div class="page-actions">
-            <a href="#quick-price-calculator" class="button-primary">Calcular preço rapido</a>
+            <a href="#quick-price-calculator" class="button-primary">Calcular preço rápido</a>
             <a href="{{ route('recipes.index') }}" class="button-secondary">Abrir receitas</a>
             <a href="{{ route('products.index') }}" class="button-secondary">Ver produtos</a>
         </div>
@@ -44,7 +44,7 @@
                         <h3 class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">Monte o preço do jeito certo, sem pular etapas.</h3>
                         <p class="mt-3 max-w-2xl text-sm leading-6" style="color: var(--pf-text-soft);">A ordem que mais funciona no dia a dia e simples: cadastre insumos, organize os produtos, monte as receitas e so entao refine com custos extras e embalagens.</p>
                     </div>
-                    <span class="badge-neutral">Sistema de gestao</span>
+                    <span class="badge-neutral">Sistema de gestão</span>
                 </div>
 
                 <div class="mt-8 grid gap-4 md:grid-cols-3">
@@ -70,8 +70,8 @@
                         <p class="mt-1 text-sm" style="color: var(--pf-text-soft);">Adicione itens, custos extras e embalagens antes de validar o preço sugerido.</p>
                     </div>
                     <div class="rounded-2xl border p-4" style="border-color: var(--pf-border); background: #fff;">
-                        <p class="text-sm font-semibold" style="color: var(--pf-text);">3. Revisao comercial</p>
-                        <p class="mt-1 text-sm" style="color: var(--pf-text-soft);">Confira margem, rendimento e status do produto para manter a operacao saudavel.</p>
+                        <p class="text-sm font-semibold" style="color: var(--pf-text);">3. Revisão comercial</p>
+                        <p class="mt-1 text-sm" style="color: var(--pf-text-soft);">Confira margem, rendimento e status do produto para manter a operação saudável.</p>
                     </div>
                 </div>
             </article>
@@ -83,7 +83,7 @@
                     <div>
                         <p class="page-kicker">Resultado</p>
                         <h3 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Veja o impacto antes de cadastrar.</h3>
-                        <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">O preço base considera custo por unidade mais margem. Quando houver canal, o sistema recalcula o valor final para preservar o liquido desejado.</p>
+                        <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">O preço base considera custo por unidade mais margem. Quando houver canal, o sistema recalcula o valor final para preservar o líquido desejado.</p>
                     </div>
                     @if ($calculatorResult)
                     <span class="badge-success">Calculo pronto</span>
@@ -102,7 +102,7 @@
 
                 <div class="mt-8 space-y-4">
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
-                        <p class="metric-label">Custo unitario</p>
+                        <p class="metric-label">Custo unitário</p>
                             <p class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">@money((float) $calculatorResult['unit_cost'], auth()->user()->company)</p>
                         <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Custo total dividido pelo rendimento informado.</p>
                     </div>
@@ -118,7 +118,7 @@
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
                         <p class="metric-label">Lucro por unidade</p>
                             <p class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">@money((float) $calculatorResult['profit_per_unit'], auth()->user()->company)</p>
-                        <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Liquido estimado apos descontar o custo unitario.</p>
+                        <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Líquido estimado após descontar o custo unitário.</p>
                     </div>
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
@@ -149,23 +149,23 @@
                             </div>
                         </dl>
                         @else
-                        <p class="mt-4 text-sm leading-6" style="color: var(--pf-text-soft);">Nenhum canal selecionado. O preço sugerido corresponde ao valor base para balcao, retirada ou vendas sem taxa adicional.</p>
+                        <p class="mt-4 text-sm leading-6" style="color: var(--pf-text-soft);">Nenhum canal selecionado. O preço sugerido corresponde ao valor base para balcão, retirada ou vendas sem taxa adicional.</p>
                         @endif
                     </div>
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
-                        <p class="metric-label">Resumo do calculo</p>
+                        <p class="metric-label">Resumo do cálculo</p>
                         <dl class="mt-4 space-y-3 text-sm" style="color: var(--pf-text-soft);">
                             <div class="flex items-center justify-between gap-3">
                                 <dt>Custo total considerado</dt>
                                 <dd class="font-semibold" style="color: var(--pf-text);">@money((float) $calculatorResult['total_cost'], auth()->user()->company)</dd>
                             </div>
                             <div class="flex items-center justify-between gap-3">
-                                <dt>preço minimo sem lucro</dt>
+                                <dt>Preço mínimo sem lucro</dt>
                                 <dd class="font-semibold" style="color: var(--pf-text);">@money((float) $calculatorResult['minimum_price'], auth()->user()->company)</dd>
                             </div>
                             <div class="flex items-center justify-between gap-3">
-                                <dt>preço base no balcao</dt>
+                                <dt>Preço base no balcão</dt>
                                 <dd class="font-semibold" style="color: var(--pf-text);">@money((float) $calculatorResult['base_suggested_price'], auth()->user()->company)</dd>
                             </div>
                             <div class="flex items-center justify-between gap-3">
@@ -183,15 +183,15 @@
                     </div>
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
-                        <p class="metric-label">Custo unitario</p>
+                        <p class="metric-label">Custo unitário</p>
                         <p class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">R$ 0,00</p>
-                        <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Aguardando os dados do calculo.</p>
+                        <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Aguardando os dados do cálculo.</p>
                     </div>
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
                         <p class="metric-label">preço sugerido</p>
                         <p class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">R$ 0,00</p>
-                        <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Preencha o formulario para gerar a sugestao.</p>
+                        <p class="mt-2 text-sm" style="color: var(--pf-text-soft);">Preencha o formulário para gerar a sugestão.</p>
                     </div>
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
@@ -208,22 +208,22 @@
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
                         <p class="metric-label">Canal e taxas</p>
-                        <p class="mt-4 text-sm leading-6" style="color: var(--pf-text-soft);">Nenhum canal selecionado. O preço ajustado por taxa aparecera aqui depois do calculo.</p>
+                        <p class="mt-4 text-sm leading-6" style="color: var(--pf-text-soft);">Nenhum canal selecionado. O preço ajustado por taxa aparecerá aqui depois do cálculo.</p>
                     </div>
 
                     <div class="rounded-[24px] border p-5" style="border-color: var(--pf-border); background: #fff;">
-                        <p class="metric-label">Resumo do calculo</p>
+                        <p class="metric-label">Resumo do cálculo</p>
                         <dl class="mt-4 space-y-3 text-sm" style="color: var(--pf-text-soft);">
                             <div class="flex items-center justify-between gap-3">
                                 <dt>Custo total considerado</dt>
                                 <dd class="font-semibold" style="color: var(--pf-text);">R$ 0,00</dd>
                             </div>
                             <div class="flex items-center justify-between gap-3">
-                                <dt>preço minimo sem lucro</dt>
+                                <dt>Preço mínimo sem lucro</dt>
                                 <dd class="font-semibold" style="color: var(--pf-text);">R$ 0,00</dd>
                             </div>
                             <div class="flex items-center justify-between gap-3">
-                                <dt>preço base no balcao</dt>
+                                <dt>Preço base no balcão</dt>
                                 <dd class="font-semibold" style="color: var(--pf-text);">R$ 0,00</dd>
                             </div>
                             <div class="flex items-center justify-between gap-3">
@@ -241,7 +241,7 @@
                     <div>
                         <p class="page-kicker">Calculadora rápida</p>
                         <h3 class="mt-2 text-lg font-semibold" style="color: var(--pf-text);">Simule um preço de venda sem abrir cadastro.</h3>
-                        <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Informe custo da receita, rendimento, embalagem, outros custos e margem. Se escolher um canal, o sistema ajusta o preço para manter o valor liquido desejado.</p>
+                        <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">Informe custo da receita, rendimento, embalagem, outros custos e margem. Se escolher um canal, o sistema ajusta o preço para manter o valor líquido desejado.</p>
                     </div>
                     <span class="badge-accent">Sem salvar</span>
                 </div>
@@ -304,7 +304,7 @@
 
                     <div class="flex items-center justify-end gap-3 border-t border-slate-200 pt-6">
                         <a href="{{ route('dashboard') }}#quick-price-calculator" class="button-secondary">Limpar</a>
-                        <button type="submit" class="button-primary">Calcular preço rapido</button>
+                        <button type="submit" class="button-primary">Calcular preço rápido</button>
                     </div>
                 </form>
             </article>

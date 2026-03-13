@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="page-header !mb-0">
             <div>
-                <p class="page-kicker">Ficha tecnica</p>
+                <p class="page-kicker">Ficha técnica</p>
                 <h2 class="page-title">{{ $recipe->name }}</h2>
                 <p class="page-subtitle">Produto vinculado: {{ $recipe->product?->name ?? 'Sem produto vinculado' }}</p>
             </div>
@@ -159,7 +159,7 @@
                             <div class="flex justify-between gap-3"><dt>Rendimento</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">{{ $recipe->yield_quantity }} {{ $recipe->yield_unit }}</dd></div>
                             <div class="flex justify-between gap-3"><dt>Custos extras</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->extra_cost_total, $recipe->company)</dd></div>
                             <div class="flex justify-between gap-3"><dt>Embalagem</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->packaging_cost_total, $recipe->company)</dd></div>
-                            <div class="flex justify-between gap-3"><dt>Custo unitario</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->unit_cost, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Custo unitário</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->unit_cost, $recipe->company)</dd></div>
                         </dl>
                     </div>
 
@@ -186,7 +186,7 @@
                         </div>
                         <div class="mt-6">
                             @if ($recipe->items->isEmpty())
-                                <p class="auth-muted">Esta receita ainda nao possui itens cadastrados.</p>
+                                <p class="auth-muted">Esta receita ainda não possui itens cadastrados.</p>
                             @else
                                 <div class="space-y-4">
                                     @foreach ($recipe->items as $item)
