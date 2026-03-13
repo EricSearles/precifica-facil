@@ -26,6 +26,8 @@ class ExtraCostService
             'value' => $normalizedData['value'],
             'labor_minutes' => $normalizedData['labor_minutes'],
             'labor_hourly_rate' => $normalizedData['labor_hourly_rate'],
+            'monthly_salary' => $normalizedData['monthly_salary'],
+            'monthly_hours' => $normalizedData['monthly_hours'],
         ]);
 
         $this->recipeService->recalculateAndUpdate((int) $extraCost->recipe_id, $companyId);
@@ -42,6 +44,8 @@ class ExtraCostService
         $extraCost->value = $normalizedData['value'];
         $extraCost->labor_minutes = $normalizedData['labor_minutes'];
         $extraCost->labor_hourly_rate = $normalizedData['labor_hourly_rate'];
+        $extraCost->monthly_salary = $normalizedData['monthly_salary'];
+        $extraCost->monthly_hours = $normalizedData['monthly_hours'];
 
         $this->extraCostRepository->save($extraCost);
         $this->recipeService->recalculateAndUpdate((int) $extraCost->recipe_id, $companyId);
@@ -67,6 +71,22 @@ class ExtraCostService
             ? round((float) $data['labor_hourly_rate'], 4)
             : null;
 
+        $monthlySalary = array_key_exists('monthly_salary', $data) && $data['monthly_salary'] !== null && $data['monthly_salary'] !== ''
+            ? round((float) $data['monthly_salary'], 4)
+            : null;
+
+        $monthlyHours = array_key_exists('monthly_hours', $data) && $data['monthly_hours'] !== null && $data['monthly_hours'] !== ''
+            ? (int) $data['monthly_hours']
+            : null;
+
+        if ($monthlySalary !== null && $monthlyHours === null) {
+            $monthlyHours = 220;
+        }
+
+        if ($laborHourlyRate === null && $monthlySalary !== null && $monthlyHours !== null && $monthlyHours > 0) {
+            $laborHourlyRate = round($monthlySalary / $monthlyHours, 4);
+        }
+
         $hasLaborCalculation = $laborMinutes !== null && $laborHourlyRate !== null;
 
         return [
@@ -78,6 +98,8 @@ class ExtraCostService
                 : (float) $data['value'],
             'labor_minutes' => $laborMinutes,
             'labor_hourly_rate' => $laborHourlyRate,
+            'monthly_salary' => $monthlySalary,
+            'monthly_hours' => $monthlyHours,
         ];
     }
 }

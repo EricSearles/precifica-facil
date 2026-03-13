@@ -21,6 +21,8 @@ class StoreExtraCostRequest extends FormRequest
             'value' => ['nullable', 'numeric', 'gte:0'],
             'labor_minutes' => ['nullable', 'integer', 'gt:0'],
             'labor_hourly_rate' => ['nullable', 'numeric', 'gt:0'],
+            'monthly_salary' => ['nullable', 'numeric', 'gt:0'],
+            'monthly_hours' => ['nullable', 'integer', 'gt:0'],
         ];
     }
 
@@ -29,13 +31,23 @@ class StoreExtraCostRequest extends FormRequest
         $validator->after(function ($validator) {
             $hasLaborMinutes = $this->filled('labor_minutes');
             $hasLaborHourlyRate = $this->filled('labor_hourly_rate');
+            $hasMonthlySalary = $this->filled('monthly_salary');
+            $hasMonthlyHours = $this->filled('monthly_hours');
             $hasValue = $this->filled('value');
 
-            if ($hasLaborMinutes xor $hasLaborHourlyRate) {
-                $validator->errors()->add('labor_minutes', 'Preencha tempo e valor por hora para calcular mão de obra.');
+            if ($hasMonthlyHours && ! $hasMonthlySalary) {
+                $validator->errors()->add('monthly_salary', 'Informe o salário mensal para usar horas por mês.');
             }
 
-            if (! $hasValue && ! ($hasLaborMinutes && $hasLaborHourlyRate)) {
+            if ($hasLaborMinutes && ! $hasLaborHourlyRate && ! $hasMonthlySalary) {
+                $validator->errors()->add('labor_minutes', 'Preencha tempo e valor por hora ou salário mensal para calcular mão de obra.');
+            }
+
+            if (! $hasLaborMinutes && ($hasLaborHourlyRate || $hasMonthlySalary)) {
+                $validator->errors()->add('labor_minutes', 'Preencha o tempo de mão de obra para calcular esse custo.');
+            }
+
+            if (! $hasValue && ! ($hasLaborMinutes && ($hasLaborHourlyRate || $hasMonthlySalary))) {
                 $validator->errors()->add('value', 'Informe um valor manual ou os campos de mão de obra.');
             }
         });

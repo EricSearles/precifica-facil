@@ -6,10 +6,11 @@ use App\Http\Requests\Ingredients\StoreIngredientRequest;
 use App\Http\Requests\Ingredients\UpdateIngredientRequest;
 use App\Repositories\IngredientRepository;
 use App\Services\IngredientService;
-use InvalidArgumentException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use InvalidArgumentException;
 
 class IngredientController extends Controller
 {
@@ -33,6 +34,28 @@ class IngredientController extends Controller
     public function create(): View
     {
         return view('ingredients.create');
+    }
+
+    public function search(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->query('q', ''));
+
+        if (mb_strlen($search) < 2) {
+            return response()->json([
+                'results' => [],
+            ]);
+        }
+
+        $ingredients = $this->ingredientRepository->searchByCompany((int) $request->user()->company_id, $search);
+
+        return response()->json([
+            'results' => $ingredients->map(fn ($ingredient) => [
+                'id' => $ingredient->id,
+                'name' => $ingredient->name,
+                'brand' => $ingredient->brand,
+                'base_unit' => $ingredient->base_unit,
+            ])->values(),
+        ]);
     }
 
     public function store(StoreIngredientRequest $request): RedirectResponse

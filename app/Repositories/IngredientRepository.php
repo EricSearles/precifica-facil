@@ -29,6 +29,20 @@ class IngredientRepository
             ->withQueryString();
     }
 
+    public function searchByCompany(int $companyId, string $search, int $limit = 8): Collection
+    {
+        return Ingredient::where('company_id', $companyId)
+            ->where('is_active', true)
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('brand', 'like', "%{$search}%");
+            })
+            ->orderByRaw('case when name like ? then 0 else 1 end', [$search.'%'])
+            ->orderBy('name')
+            ->limit($limit)
+            ->get();
+    }
+
     public function findById(int $id, int $companyId): ?Ingredient
     {
         return Ingredient::where('company_id', $companyId)

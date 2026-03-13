@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/ingredients', [IngredientController::class, 'index'])->name('ingredients.index');
     Route::get('/ingredients/create', [IngredientController::class, 'create'])->name('ingredients.create');
+    Route::get('/ingredients/search', [IngredientController::class, 'search'])->name('ingredients.search');
     Route::post('/ingredients', [IngredientController::class, 'store'])->name('ingredients.store');
     Route::get('/ingredients/{ingredient}/edit', [IngredientController::class, 'edit'])->name('ingredients.edit');
     Route::put('/ingredients/{ingredient}', [IngredientController::class, 'update'])->name('ingredients.update');

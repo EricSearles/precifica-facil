@@ -16,12 +16,16 @@ class ExtraCost extends Model
         'value',
         'labor_minutes',
         'labor_hourly_rate',
+        'monthly_salary',
+        'monthly_hours',
     ];
 
     protected $casts = [
         'value' => 'decimal:2',
         'labor_minutes' => 'integer',
         'labor_hourly_rate' => 'decimal:2',
+        'monthly_salary' => 'decimal:2',
+        'monthly_hours' => 'integer',
     ];
 
     public function company(): BelongsTo
