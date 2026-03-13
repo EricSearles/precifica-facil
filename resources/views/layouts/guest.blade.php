@@ -18,7 +18,7 @@
     <div class="auth-shell">
         <div class="auth-brand brand-stack">
             <a href="/" class="brand-image-link">
-                <img src="{{ asset('images/logo-serales-pequeno.png') }}" alt="Serales" class="brand-image">
+                <img src="{{ asset('images/logo-vazado.png') }}" alt="Serales" class="brand-image">
             </a>
             <div class="brand-copy">
                 <div class="brand-badge">Sistema de precificação</div>
