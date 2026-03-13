@@ -203,5 +203,109 @@ window.ingredientConversionForm = function (config = {}) {
     };
 };
 
+window.recipeIngredientAutocomplete = function (config = {}) {
+    return {
+        search: config.initialLabel ?? '',
+        selectedIngredient: config.initialId ?? '',
+        selectedUnit: config.initialUnit ?? '',
+        results: [],
+        loading: false,
+        open: false,
+        highlightedIndex: -1,
+        searchUrl: config.searchUrl ?? '',
+        createUrl: config.createUrl ?? '',
+        unitOptions: config.unitOptions ?? {},
+        timer: null,
+
+        init() {
+            this.$watch('selectedIngredient', () => {
+                const units = this.unitOptions[this.selectedIngredient] || [];
+
+                if (!units.includes(this.selectedUnit)) {
+                    this.selectedUnit = units[0] || '';
+                }
+            });
+        },
+
+        queueSearch() {
+            window.clearTimeout(this.timer);
+
+            if (this.search.trim().length < 2) {
+                this.results = [];
+                this.open = false;
+                this.loading = false;
+                return;
+            }
+
+            this.loading = true;
+            this.open = true;
+            this.timer = window.setTimeout(() => this.fetchResults(), 220);
+        },
+
+        async fetchResults() {
+            try {
+                const response = await fetch(`${this.searchUrl}?q=${encodeURIComponent(this.search.trim())}`, {
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                });
+
+                const payload = await response.json();
+                this.results = payload.results ?? [];
+                this.highlightedIndex = this.results.length ? 0 : -1;
+                this.open = true;
+            } catch (error) {
+                this.results = [];
+                this.highlightedIndex = -1;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        selectIngredient(ingredient) {
+            this.selectedIngredient = String(ingredient.id);
+            this.search = ingredient.brand ? `${ingredient.name} · ${ingredient.brand}` : ingredient.name;
+            this.results = [];
+            this.open = false;
+        },
+
+        clearSelection() {
+            this.selectedIngredient = '';
+            this.search = '';
+            this.results = [];
+            this.highlightedIndex = -1;
+            this.open = false;
+        },
+
+        moveHighlight(step) {
+            if (!this.results.length) {
+                return;
+            }
+
+            const nextIndex = this.highlightedIndex + step;
+
+            if (nextIndex < 0) {
+                this.highlightedIndex = this.results.length - 1;
+                return;
+            }
+
+            if (nextIndex >= this.results.length) {
+                this.highlightedIndex = 0;
+                return;
+            }
+
+            this.highlightedIndex = nextIndex;
+        },
+
+        confirmHighlight() {
+            if (this.highlightedIndex < 0 || this.highlightedIndex >= this.results.length) {
+                return;
+            }
+
+            this.selectIngredient(this.results[this.highlightedIndex]);
+        },
+    };
+};
+
 Alpine.start();
 

@@ -20,6 +20,8 @@
 
     @php
         $units = ['un', 'g', 'kg', 'ml', 'l'];
+        $expectedRevenue = (float) $recipe->suggested_sale_price * (float) $recipe->yield_quantity;
+        $expectedProfit = $expectedRevenue - (float) $recipe->recipe_total_cost;
         $popularConversions = [
             ['measure' => 'Colher de chá', 'ml' => '5 ML', 'g' => '4,5 G a 5,5 G'],
             ['measure' => 'Colher de sopa', 'ml' => '15 ML', 'g' => '13,5 G a 16,5 G'],
@@ -41,7 +43,7 @@
                 <div class="flash-error">{{ session('error') }}</div>
             @endif
 
-            <div class="grid gap-6 lg:grid-cols-4">
+            <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-6">
                 <div class="metric-card">
                     <p class="metric-label">Custo ingredientes</p>
                     <p class="metric-value">@money((float) $recipe->ingredients_cost_total, $recipe->company)</p>
@@ -55,7 +57,7 @@
                     <p class="metric-value">@money((float) $recipe->recipe_total_cost, $recipe->company)</p>
                 </div>
                 <div class="metric-card">
-                    <p class="metric-label">Preco sugerido</p>
+                    <p class="metric-label">Preço sugerido</p>
                     <p class="metric-value">@money((float) $recipe->suggested_sale_price, $recipe->company)</p>
                     @if ($recipe->product?->productChannelPrices?->isNotEmpty())
                         <div class="channel-price-list">
@@ -68,6 +70,16 @@
                         </div>
                     @endif
                 </div>
+                <div class="metric-card">
+                    <p class="metric-label">Expectativa de receita</p>
+                    <p class="metric-value">@money($expectedRevenue, $recipe->company)</p>
+                    <p class="metric-caption">Preço sugerido multiplicado pelo rendimento da receita.</p>
+                </div>
+                <div class="metric-card">
+                    <p class="metric-label">Lucro esperado do lote</p>
+                    <p class="metric-value">@money($expectedProfit, $recipe->company)</p>
+                    <p class="metric-caption">Receita estimada menos o custo total da receita.</p>
+                </div>
             </div>
 
             <div class="grid gap-6 lg:grid-cols-3 lg:items-start">
@@ -77,18 +89,94 @@
                             <h3 class="form-section-title">Adicionar ingrediente</h3>
                             <p class="form-section-subtitle">Inclua os insumos que compoem a receita e mantenha o custo atualizado. O sistema converte automaticamente a unidade usada na receita para calcular o valor correto do item.</p>
                         </div>
-                        <form method="POST" action="{{ route('recipe-items.store') }}" class="mt-6 grid gap-4 md:grid-cols-4" x-data="{ unitOptions: @js($ingredientUnitOptions), selectedIngredient: '{{ old('ingredient_id', '') }}', selectedUnit: '{{ old('unit_used', '') }}' }">
-                            <div x-effect="if (selectedIngredient && !(unitOptions[selectedIngredient] || []).includes(selectedUnit)) { selectedUnit = (unitOptions[selectedIngredient] || [])[0] || ''; }" class="hidden"></div>
+                        @php
+                            $selectedIngredient = old('ingredient_id') ? $ingredients->firstWhere('id', (int) old('ingredient_id')) : null;
+                            $selectedIngredientLabel = $selectedIngredient
+                                ? trim($selectedIngredient->name.($selectedIngredient->brand ? ' · '.$selectedIngredient->brand : ''))
+                                : '';
+                        @endphp
+                        <form
+                            method="POST"
+                            action="{{ route('recipe-items.store') }}"
+                            class="mt-6 grid gap-4 md:grid-cols-4"
+                            x-data="recipeIngredientAutocomplete({
+                                searchUrl: '{{ route('ingredients.search') }}',
+                                createUrl: '{{ route('ingredients.create') }}',
+                                unitOptions: @js($ingredientUnitOptions),
+                                initialId: '{{ old('ingredient_id', '') }}',
+                                initialUnit: '{{ old('unit_used', '') }}',
+                                initialLabel: @js($selectedIngredientLabel),
+                            })"
+                        >
                             @csrf
                             <input type="hidden" name="recipe_id" value="{{ $recipe->id }}">
+                            <input type="hidden" name="ingredient_id" x-model="selectedIngredient">
                             <div class="md:col-span-2">
-                                <x-input-label for="ingredient_id" :value="__('Ingrediente')" />
-                                <select id="ingredient_id" name="ingredient_id" class="mt-1 block w-full" x-model="selectedIngredient">
-                                    <option value="">Selecione...</option>
-                                    @foreach ($ingredients as $ingredient)
-                                        <option value="{{ $ingredient->id }}" @selected((string) old('ingredient_id') === (string) $ingredient->id)>{{ $ingredient->name }}</option>
-                                    @endforeach
-                                </select>
+                                <x-input-label for="ingredient_search" :value="__('Ingrediente')" />
+                                <div class="relative mt-1" @click.outside="open = false">
+                                    <x-text-input
+                                        id="ingredient_search"
+                                        type="text"
+                                        class="block w-full pr-24"
+                                        x-model="search"
+                                        @input="queueSearch"
+                                        @focus="if (results.length) open = true"
+                                        @keydown.arrow-down.prevent="moveHighlight(1)"
+                                        @keydown.arrow-up.prevent="moveHighlight(-1)"
+                                        @keydown.enter.prevent="confirmHighlight"
+                                        @keydown.escape="open = false"
+                                        placeholder="Digite para buscar ingrediente"
+                                        autocomplete="off"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="absolute inset-y-1 right-1 rounded-xl px-3 text-xs font-semibold transition duration-200 ease-out"
+                                        style="background: #eef4fb; color: var(--pf-primary);"
+                                        @click="clearSelection"
+                                        x-show="search || selectedIngredient"
+                                        x-cloak
+                                    >
+                                        Limpar
+                                    </button>
+
+                                    <div
+                                        class="absolute z-20 mt-2 w-full overflow-hidden rounded-[20px] border bg-white shadow-lg"
+                                        style="border-color: var(--pf-border);"
+                                        x-show="open"
+                                        x-cloak
+                                    >
+                                        <template x-if="loading">
+                                            <div class="px-4 py-3 text-sm" style="color: var(--pf-text-soft);">Buscando ingredientes...</div>
+                                        </template>
+
+                                        <template x-if="!loading && results.length">
+                                            <div class="max-h-72 overflow-y-auto py-2">
+                                                <template x-for="(ingredient, index) in results" :key="ingredient.id">
+                                                    <button
+                                                        type="button"
+                                                        class="flex w-full items-start justify-between gap-3 px-4 py-3 text-left transition duration-150 ease-out"
+                                                        :style="highlightedIndex === index ? 'background: #eef4fb;' : ''"
+                                                        @mouseenter="highlightedIndex = index"
+                                                        @click="selectIngredient(ingredient)"
+                                                    >
+                                                        <span>
+                                                            <span class="block text-sm font-semibold" style="color: var(--pf-text);" x-text="ingredient.name"></span>
+                                                            <span class="mt-1 block text-xs" style="color: var(--pf-text-soft);" x-text="ingredient.brand ? ingredient.brand : 'Sem marca informada'"></span>
+                                                        </span>
+                                                        <span class="text-xs font-semibold uppercase" style="color: var(--pf-primary);" x-text="ingredient.base_unit ? ingredient.base_unit : ''"></span>
+                                                    </button>
+                                                </template>
+                                            </div>
+                                        </template>
+
+                                        <template x-if="!loading && !results.length && search.trim().length >= 2">
+                                            <div class="px-4 py-4 text-sm" style="color: var(--pf-text-soft);">
+                                                <p>Nenhum ingrediente encontrado.</p>
+                                                <a :href="createUrl" class="auth-link mt-2 inline-flex">Cadastrar ingrediente</a>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
                                 <x-input-error :messages="$errors->get('ingredient_id')" class="mt-2" />
                             </div>
                             <div>
@@ -160,6 +248,8 @@
                             <div class="flex justify-between gap-3"><dt>Custos extras</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->extra_cost_total, $recipe->company)</dd></div>
                             <div class="flex justify-between gap-3"><dt>Embalagem</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->packaging_cost_total, $recipe->company)</dd></div>
                             <div class="flex justify-between gap-3"><dt>Custo unitário</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money((float) $recipe->unit_cost, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Expectativa de receita</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money($expectedRevenue, $recipe->company)</dd></div>
+                            <div class="flex justify-between gap-3"><dt>Lucro esperado do lote</dt><dd class="text-right font-semibold" style="color: var(--pf-text);">@money($expectedProfit, $recipe->company)</dd></div>
                         </dl>
                     </div>
 
@@ -244,7 +334,7 @@
                             <p class="form-section-subtitle">Acrescente despesas indiretas e percentuais para aproximar o custo real.</p>
                         </div>
                         <div class="mt-6 space-y-6">
-                            <form method="POST" action="{{ route('extra-costs.store') }}" class="grid gap-4 md:grid-cols-3">
+                            <form method="POST" action="{{ route('extra-costs.store') }}" class="grid gap-4 md:grid-cols-4">
                                 @csrf
                                 <input type="hidden" name="recipe_id" value="{{ $recipe->id }}">
                                 <div>
@@ -275,7 +365,20 @@
                                     <x-text-input id="labor_hourly_rate" name="labor_hourly_rate" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('labor_hourly_rate')" />
                                     <x-input-error :messages="$errors->get('labor_hourly_rate')" class="mt-2" />
                                 </div>
-                                <div class="md:col-span-3 flex justify-end">
+                                <div>
+                                    <x-input-label for="monthly_salary" :value="__('Salário mensal')" />
+                                    <x-text-input id="monthly_salary" name="monthly_salary" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('monthly_salary')" />
+                                    <x-input-error :messages="$errors->get('monthly_salary')" class="mt-2" />
+                                </div>
+                                <div>
+                                    <x-input-label for="monthly_hours" :value="__('Horas/mês')" />
+                                    <x-text-input id="monthly_hours" name="monthly_hours" type="number" step="1" min="1" class="mt-1 block w-full" :value="old('monthly_hours', 220)" />
+                                    <x-input-error :messages="$errors->get('monthly_hours')" class="mt-2" />
+                                </div>
+                                <div class="md:col-span-4">
+                                    <p class="text-xs leading-5" style="color: var(--pf-text-soft);">Se preferir, informe o salário mensal e o sistema calcula automaticamente o valor da hora. O padrão é 220 horas por mês, mas você pode ajustar.</p>
+                                </div>
+                                <div class="md:col-span-4 flex justify-end">
                                     <button type="submit" class="button-primary">Adicionar custo extra</button>
                                 </div>
                             </form>
@@ -287,7 +390,7 @@
                                         <form method="POST" action="{{ route('extra-costs.update', $extraCost->id) }}" class="rounded-[24px] border p-4" style="border-color: var(--pf-border); background: #fbfdff;">
                                             @csrf
                                             @method('PUT')
-                                            <div class="grid gap-4 md:grid-cols-4">
+                                            <div class="grid gap-4 md:grid-cols-5">
                                                 <div>
                                                     <x-input-label :value="__('Descricao')" />
                                                     <x-text-input name="description" type="text" class="mt-1 block w-full" :value="$extraCost->description" required />
@@ -311,6 +414,14 @@
                                                     <x-input-label :value="__('Valor da hora')" />
                                                     <x-text-input name="labor_hourly_rate" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="$extraCost->labor_hourly_rate" />
                                                 </div>
+                                                <div>
+                                                    <x-input-label :value="__('Salário mensal')" />
+                                                    <x-text-input name="monthly_salary" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="$extraCost->monthly_salary" />
+                                                </div>
+                                                <div>
+                                                    <x-input-label :value="__('Horas/mês')" />
+                                                    <x-text-input name="monthly_hours" type="number" step="1" min="1" class="mt-1 block w-full" :value="$extraCost->monthly_hours ?? 220" />
+                                                </div>
                                                 <div class="text-sm md:col-span-2" style="color: var(--pf-text-soft);">
                                                     <p class="font-semibold" style="color: var(--pf-text);">Impacto</p>
                                                     <p class="mt-1">
@@ -323,6 +434,11 @@
                                                     @if ($extraCost->labor_minutes && $extraCost->labor_hourly_rate)
                                                         <p class="mt-1">
                                                             {{ $extraCost->labor_minutes }} min x @money((float) $extraCost->labor_hourly_rate, $recipe->company) / hora
+                                                        </p>
+                                                    @endif
+                                                    @if ($extraCost->monthly_salary)
+                                                        <p class="mt-1">
+                                                            Base mensal: @money((float) $extraCost->monthly_salary, $recipe->company) / {{ $extraCost->monthly_hours ?? 220 }} h
                                                         </p>
                                                     @endif
                                                 </div>
