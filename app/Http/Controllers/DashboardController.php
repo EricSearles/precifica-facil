@@ -76,15 +76,15 @@ class DashboardController extends Controller
         }
 
         $metrics = [
-            ['label' => 'Ingredientes ativos', 'value' => Ingredient::where('company_id', $companyId)->where('is_active', true)->count(), 'caption' => 'Base da sua ficha tecnica e custo de producao.'],
+            ['label' => 'Ingredientes ativos', 'value' => Ingredient::where('company_id', $companyId)->where('is_active', true)->count(), 'caption' => 'Base da sua ficha técnica e custo de produção.'],
             ['label' => 'Produtos cadastrados', 'value' => Product::where('company_id', $companyId)->count(), 'caption' => 'Itens vendidos com margem, rendimento e embalagem.'],
-            ['label' => 'Receitas estruturadas', 'value' => Recipe::where('company_id', $companyId)->count(), 'caption' => 'Composicoes prontas para calculo e revisao rápida.'],
-            ['label' => 'Custos extras', 'value' => ExtraCost::where('company_id', $companyId)->count(), 'caption' => 'Gas, perdas, taxas e demais impactos indiretos.'],
+            ['label' => 'Receitas estruturadas', 'value' => Recipe::where('company_id', $companyId)->count(), 'caption' => 'Composições prontas para cálculo e revisão rápida.'],
+            ['label' => 'Custos extras', 'value' => ExtraCost::where('company_id', $companyId)->count(), 'caption' => 'Gás, perdas, taxas e demais impactos indiretos.'],
         ];
 
         $quickLinks = [
-            ['title' => 'Cadastrar ingrediente', 'description' => 'Monte a base dos insumos com custo de compra e unidade padrao.', 'route' => route('ingredients.create')],
-            ['title' => 'Criar produto', 'description' => 'Defina margem, rendimento e prepare o item para formacao de preço.', 'route' => route('products.create')],
+            ['title' => 'Cadastrar ingrediente', 'description' => 'Monte a base dos insumos com custo de compra e unidade padrão.', 'route' => route('ingredients.create')],
+            ['title' => 'Criar produto', 'description' => 'Defina margem, rendimento e prepare o item para formação de preço.', 'route' => route('products.create')],
             ['title' => 'Montar receita', 'description' => 'Vincule ingredientes, custos extras e embalagem para fechar o custo real.', 'route' => route('recipes.create')],
         ];
 

@@ -42,7 +42,7 @@
                     <div>
                         <p class="page-kicker">Fluxo recomendado</p>
                         <h3 class="mt-2 text-2xl font-semibold" style="color: var(--pf-text);">Monte o preço do jeito certo, sem pular etapas.</h3>
-                        <p class="mt-3 max-w-2xl text-sm leading-6" style="color: var(--pf-text-soft);">A ordem que mais funciona no dia a dia e simples: cadastre insumos, organize os produtos, monte as receitas e so entao refine com custos extras e embalagens.</p>
+                        <p class="mt-3 max-w-2xl text-sm leading-6" style="color: var(--pf-text-soft);">A ordem que mais funciona no dia a dia é simples: cadastre insumos, organize os produtos, monte as receitas e só então refine com custos extras e embalagens.</p>
                     </div>
                     <span class="badge-neutral">Sistema de gestão</span>
                 </div>
@@ -86,7 +86,7 @@
                         <p class="mt-3 text-sm leading-6" style="color: var(--pf-text-soft);">O preço base considera custo por unidade mais margem. Quando houver canal, o sistema recalcula o valor final para preservar o líquido desejado.</p>
                     </div>
                     @if ($calculatorResult)
-                    <span class="badge-success">Calculo pronto</span>
+                    <span class="badge-success">Cálculo pronto</span>
                     @else
                     <span class="badge-neutral">Aguardando dados</span>
                     @endif
