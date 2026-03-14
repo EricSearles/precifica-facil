@@ -2,7 +2,6 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Catálogo comercial</p>
-            <!-- <h2 class="page-title">Produtos prontos para precificação e venda.</h2> -->
             <p class="page-subtitle">Acompanhe margem, rendimento, status, preço sugerido e preços por canal em uma visão organizada para decisões rápidas.</p>
         </div>
 
@@ -16,6 +15,10 @@
             <div class="flash-success">{{ session('success') }}</div>
         @endif
 
+        @if (session('error'))
+            <div class="flash-error">{{ session('error') }}</div>
+        @endif
+
         <section class="table-shell">
             <div class="table-toolbar">
                 <div>
@@ -24,10 +27,21 @@
                 </div>
                 <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
                     <form method="GET" action="{{ route('products.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar produto" class="block w-full sm:w-64">
+                        <input type="text" name="search" value="{{ $filters['search'] }}" placeholder="Buscar produto ou categoria" class="block w-full sm:w-64">
+                        <select name="category_id" class="block w-full sm:w-48">
+                            <option value="0">Todas as categorias</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" @selected((int) $filters['category_id'] === (int) $category->id)>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                        <select name="status" class="block w-full sm:w-44">
+                            <option value="">Todos os status</option>
+                            <option value="active" @selected($filters['status'] === 'active')>Somente ativos</option>
+                            <option value="inactive" @selected($filters['status'] === 'inactive')>Somente inativos</option>
+                        </select>
                         <div class="flex items-center gap-2">
-                            <button type="submit" class="button-secondary">Buscar</button>
-                            @if ($search !== '')
+                            <button type="submit" class="button-secondary">Aplicar filtros</button>
+                            @if ($filters['search'] !== '' || $filters['status'] !== '' || (int) $filters['category_id'] > 0)
                                 <a href="{{ route('products.index') }}" class="button-secondary">Limpar</a>
                             @endif
                         </div>
@@ -38,8 +52,8 @@
 
             @if ($products->isEmpty())
                 <div class="empty-state">
-                    <p class="text-base font-semibold text-slate-900">Nenhum produto cadastrado ainda.</p>
-                    <p class="mt-2 text-sm text-slate-500">Comece criando seu primeiro produto para depois vincular receita, embalagem e canais.</p>
+                    <p class="text-base font-semibold text-slate-900">Nenhum produto encontrado.</p>
+                    <p class="mt-2 text-sm text-slate-500">Ajuste os filtros ou cadastre um novo produto para começar a precificar por canal.</p>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -99,6 +113,11 @@
                                     <td class="table-actions-cell">
                                         <div class="table-actions-wrap">
                                             <a href="{{ route('products.edit', $product->id) }}" class="button-table-action">Editar</a>
+                                            <a href="{{ route('products.edit', $product->id) }}#product-channels-section" class="button-table-action">Ver canais</a>
+                                            <form method="POST" action="{{ route('products.duplicate', $product->id) }}">
+                                                @csrf
+                                                <button type="submit" class="button-table-action">Duplicar</button>
+                                            </form>
                                             <form method="POST" action="{{ route('products.destroy', $product->id) }}" onsubmit="return confirm('Deseja remover este produto?');">
                                                 @csrf
                                                 @method('DELETE')

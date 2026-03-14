@@ -22,12 +22,15 @@ class IngredientController extends Controller
 
     public function index(Request $request): View
     {
-        $search = trim((string) $request->query('search', ''));
-        $ingredients = $this->ingredientRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
+        $filters = [
+            'search' => trim((string) $request->query('search', '')),
+            'status' => (string) $request->query('status', ''),
+        ];
+        $ingredients = $this->ingredientRepository->getPaginatedByCompany((int) $request->user()->company_id, $filters);
 
         return view('ingredients.index', [
             'ingredients' => $ingredients,
-            'search' => $search,
+            'filters' => $filters,
         ]);
     }
 
@@ -70,7 +73,7 @@ class IngredientController extends Controller
 
         return redirect()
             ->route('ingredients.index')
-            ->with('success', 'Ingrediente criado com sucesso.');
+            ->with('success', 'Ingrediente adicionado. Ele já está pronto para entrar nas próximas receitas.');
     }
 
     public function edit(Request $request, int $ingredient): View
@@ -100,7 +103,7 @@ class IngredientController extends Controller
 
         return redirect()
             ->route('ingredients.index')
-            ->with('success', 'Ingrediente atualizado com sucesso.');
+            ->with('success', 'Ingrediente atualizado. Os próximos cálculos já vão usar esse custo revisado.');
     }
 
     public function destroy(Request $request, int $ingredient): RedirectResponse
@@ -113,6 +116,6 @@ class IngredientController extends Controller
 
         return redirect()
             ->route('ingredients.index')
-            ->with('success', 'Ingrediente removido com sucesso.');
+            ->with('success', 'Ingrediente removido da base da empresa.');
     }
 }

@@ -16,9 +16,11 @@ class RecipeRepository
             ->get();
     }
 
-    public function getPaginatedByCompany(int $companyId, ?string $search = null, ?int $perPage = null): LengthAwarePaginator
+    public function getPaginatedByCompany(int $companyId, array $filters = [], ?int $perPage = null): LengthAwarePaginator
     {
         $perPage ??= (int) config('precificafacil.pagination.per_page', 10);
+        $search = trim((string) ($filters['search'] ?? ''));
+        $productId = (int) ($filters['product_id'] ?? 0);
 
         return Recipe::with(['company.setting', 'product.productChannelPrices.salesChannel', 'product'])
             ->where('company_id', $companyId)
@@ -26,6 +28,7 @@ class RecipeRepository
                 $subQuery->where('name', 'like', "%{$search}%")
                     ->orWhereHas('product', fn ($productQuery) => $productQuery->where('name', 'like', "%{$search}%"));
             }))
+            ->when($productId > 0, fn ($query) => $query->where('product_id', $productId))
             ->orderBy('name')
             ->paginate($perPage)
             ->withQueryString();

@@ -12,7 +12,7 @@
     </x-slot>
 
     <div class="space-y-6">
-        <section class="form-section">
+        <section class="form-section" id="product-packagings-section">
             <div class="mb-6">
                 <h3 class="form-section-title">Dados principais do produto</h3>
                 <p class="form-section-subtitle">Categoria, unidade de venda, rendimento e configuração de margem.</p>
@@ -30,7 +30,7 @@
             </form>
         </section>
 
-        <section class="form-section">
+        <section class="form-section" id="product-channels-section">
             <div class="mb-6 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                 <div>
                     <h3 class="form-section-title">Embalagens vinculadas</h3>

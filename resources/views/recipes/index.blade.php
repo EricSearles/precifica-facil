@@ -2,7 +2,6 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Centro de produção</p>
-            <!-- <h2 class="page-title">Receitas com custos, composição e preço sugerido.</h2> -->
             <p class="page-subtitle">Acompanhe cada receita com clareza visual, incluindo o reflexo do preço base nos canais de venda vinculados ao produto.</p>
         </div>
 
@@ -28,10 +27,16 @@
                 </div>
                 <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
                     <form method="GET" action="{{ route('recipes.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar receita" class="block w-full sm:w-64">
+                        <input type="text" name="search" value="{{ $filters['search'] }}" placeholder="Buscar receita ou produto" class="block w-full sm:w-64">
+                        <select name="product_id" class="block w-full sm:w-56">
+                            <option value="0">Todos os produtos</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}" @selected((int) $filters['product_id'] === (int) $product->id)>{{ $product->name }}</option>
+                            @endforeach
+                        </select>
                         <div class="flex items-center gap-2">
-                            <button type="submit" class="button-secondary">Buscar</button>
-                            @if ($search !== '')
+                            <button type="submit" class="button-secondary">Aplicar filtros</button>
+                            @if ($filters['search'] !== '' || (int) $filters['product_id'] > 0)
                                 <a href="{{ route('recipes.index') }}" class="button-secondary">Limpar</a>
                             @endif
                         </div>
@@ -42,8 +47,8 @@
 
             @if ($recipes->isEmpty())
                 <div class="empty-state">
-                    <p class="text-base font-semibold text-slate-900">Nenhuma receita cadastrada.</p>
-                    <p class="mt-2 text-sm text-slate-500">Crie sua primeira receita para conectar insumos, custos extras, embalagem e canais ao produto.</p>
+                    <p class="text-base font-semibold text-slate-900">Nenhuma receita encontrada.</p>
+                    <p class="mt-2 text-sm text-slate-500">Ajuste os filtros ou crie uma nova ficha técnica para acompanhar custo e preço com mais precisão.</p>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -88,6 +93,17 @@
                                         <div class="table-actions-wrap">
                                             <a href="{{ route('recipes.show', $recipe->id) }}" class="button-table-action">Detalhes</a>
                                             <a href="{{ route('recipes.edit', $recipe->id) }}" class="button-table-action">Editar</a>
+                                            <form method="POST" action="{{ route('recipes.recalculate', $recipe->id) }}">
+                                                @csrf
+                                                <button type="submit" class="button-table-action">Recalcular</button>
+                                            </form>
+                                            <form method="POST" action="{{ route('recipes.duplicate', $recipe->id) }}">
+                                                @csrf
+                                                <button type="submit" class="button-table-action">Duplicar</button>
+                                            </form>
+                                            @if ($recipe->product)
+                                                <a href="{{ route('products.edit', $recipe->product->id) }}#product-channels-section" class="button-table-action">Ver canais</a>
+                                            @endif
                                             <form method="POST" action="{{ route('recipes.destroy', $recipe->id) }}" onsubmit="return confirm('Deseja remover esta receita?');">
                                                 @csrf
                                                 @method('DELETE')

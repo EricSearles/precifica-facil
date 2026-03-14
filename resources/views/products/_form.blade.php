@@ -13,6 +13,7 @@
         <div>
             <x-input-label for="name" :value="__('Nome do produto')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $product?->name)" required autofocus />
+            <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Use o nome comercial do item vendido. Isso facilita busca, comparação e precificação.</p>
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
@@ -24,6 +25,7 @@
                     <option value="{{ $category->id }}" @selected((string) old('category_id', $product?->category_id) === (string) $category->id)>{{ $category->name }}</option>
                 @endforeach
             </select>
+            <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Separe linhas como bolos, doces ou salgados para enxergar melhor o mix de venda.</p>
             <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
         </div>
     </div>
@@ -42,12 +44,14 @@
                         <option value="{{ $unit }}" @selected(old('sale_unit', $product?->sale_unit ?? 'un') === $unit)>{{ strtoupper($unit) }}</option>
                     @endforeach
                 </select>
+                <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Escolha a mesma unidade que você usa ao vender esse produto.</p>
                 <x-input-error :messages="$errors->get('sale_unit')" class="mt-2" />
             </div>
 
             <div>
                 <x-input-label for="yield_quantity" :value="__('Rendimento')" />
                 <x-text-input id="yield_quantity" name="yield_quantity" type="number" step="0.01" min="0.01" class="mt-1 block w-full" :value="old('yield_quantity', $product?->yield_quantity ?? 1)" required />
+                <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Esse número define quanto o lote entrega para chegar ao custo por venda.</p>
                 <x-input-error :messages="$errors->get('yield_quantity')" class="mt-2" />
             </div>
 
@@ -75,6 +79,7 @@
             <div>
                 <x-input-label for="profit_margin_value" :value="__('Valor da margem')" />
                 <x-text-input id="profit_margin_value" name="profit_margin_value" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('profit_margin_value', $product?->profit_margin_value ?? 0)" required />
+                <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Defina quanto precisa ganhar nesse item para que ele faça sentido no negócio.</p>
                 <x-input-error :messages="$errors->get('profit_margin_value')" class="mt-2" />
             </div>
 
@@ -93,6 +98,7 @@
     <div>
         <x-input-label for="notes" :value="__('Observações')" />
         <textarea id="notes" name="notes" rows="4" class="mt-1 block w-full">{{ old('notes', $product?->notes) }}</textarea>
+        <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Anote estratégia comercial, observações de produção ou diferencial de venda.</p>
         <x-input-error :messages="$errors->get('notes')" class="mt-2" />
     </div>
 

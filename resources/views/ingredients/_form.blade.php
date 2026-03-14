@@ -23,12 +23,14 @@
         <div>
             <x-input-label for="name" :value="__('Nome do ingrediente')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $ingredient?->name)" required autofocus />
+            <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Use o nome que você reconhece na compra do dia a dia. Isso ajuda na busca rápida ao montar receitas.</p>
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <div>
             <x-input-label for="brand" :value="__('Marca')" />
             <x-text-input id="brand" name="brand" type="text" class="mt-1 block w-full" :value="old('brand', $ingredient?->brand)" />
+            <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Opcional. Preencha quando a marca impactar o custo ou a qualidade da produção.</p>
             <x-input-error :messages="$errors->get('brand')" class="mt-2" />
         </div>
     </div>
@@ -60,12 +62,14 @@
                 <div>
                     <x-input-label for="purchase_quantity" :value="__('Quantidade comprada')" />
                     <x-text-input id="purchase_quantity" name="purchase_quantity" type="number" step="0.01" min="0.01" class="mt-1 block w-full" :value="old('purchase_quantity', $ingredient?->purchase_quantity)" x-model="purchaseQuantity" required />
+                    <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Informe quanto vem na compra que você faz normalmente.</p>
                     <x-input-error :messages="$errors->get('purchase_quantity')" class="mt-2" />
                 </div>
 
                 <div>
                     <x-input-label for="purchase_price" :value="__('Preço de compra')" />
                     <x-text-input id="purchase_price" name="purchase_price" type="number" step="0.01" min="0" class="mt-1 block w-full" :value="old('purchase_price', $ingredient?->purchase_price)" required />
+                    <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Use o valor realmente pago. Esse número alimenta o custo das receitas.</p>
                     <x-input-error :messages="$errors->get('purchase_price')" class="mt-2" />
                 </div>
             </div>
@@ -137,6 +141,7 @@
     <div>
         <x-input-label for="notes" :value="__('Observações')" />
         <textarea id="notes" name="notes" rows="4" class="mt-1 block w-full">{{ old('notes', $ingredient?->notes) }}</textarea>
+        <p class="mt-2 text-xs" style="color: var(--pf-text-soft);">Use este espaço para fornecedor, variação de preço, safra ou qualquer detalhe útil na reposição.</p>
         <x-input-error :messages="$errors->get('notes')" class="mt-2" />
     </div>
 

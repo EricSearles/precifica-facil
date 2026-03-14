@@ -2,7 +2,6 @@
     <x-slot name="header">
         <div>
             <p class="page-kicker">Base de insumos</p>
-            <!-- <h2 class="page-title">Ingredientes com custo claro e prontos para composição.</h2> -->
             <p class="page-subtitle">Cadastre preço, unidade de compra e unidade base para formar receitas com rapidez e menos erro operacional.</p>
         </div>
 
@@ -16,6 +15,10 @@
             <div class="flash-success">{{ session('success') }}</div>
         @endif
 
+        @if (session('error'))
+            <div class="flash-error">{{ session('error') }}</div>
+        @endif
+
         <section class="table-shell">
             <div class="table-toolbar">
                 <div>
@@ -24,10 +27,15 @@
                 </div>
                 <div class="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center">
                     <form method="GET" action="{{ route('ingredients.index') }}" class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <input type="text" name="search" value="{{ $search }}" placeholder="Buscar ingrediente" class="block w-full sm:w-64">
+                        <input type="text" name="search" value="{{ $filters['search'] }}" placeholder="Buscar ingrediente ou marca" class="block w-full sm:w-64">
+                        <select name="status" class="block w-full sm:w-44">
+                            <option value="">Todos os status</option>
+                            <option value="active" @selected($filters['status'] === 'active')>Somente ativos</option>
+                            <option value="inactive" @selected($filters['status'] === 'inactive')>Somente inativos</option>
+                        </select>
                         <div class="flex items-center gap-2">
-                            <button type="submit" class="button-secondary">Buscar</button>
-                            @if ($search !== '')
+                            <button type="submit" class="button-secondary">Aplicar filtros</button>
+                            @if ($filters['search'] !== '' || $filters['status'] !== '')
                                 <a href="{{ route('ingredients.index') }}" class="button-secondary">Limpar</a>
                             @endif
                         </div>
@@ -38,8 +46,8 @@
 
             @if ($ingredients->isEmpty())
                 <div class="empty-state">
-                    <p class="text-base font-semibold text-slate-900">Nenhum ingrediente cadastrado.</p>
-                    <p class="mt-2 text-sm text-slate-500">Cadastre os insumos principais para começar a montar receitas com custo real.</p>
+                    <p class="text-base font-semibold text-slate-900">Nenhum ingrediente encontrado.</p>
+                    <p class="mt-2 text-sm text-slate-500">Ajuste os filtros ou cadastre um novo insumo para manter suas receitas consistentes.</p>
                 </div>
             @else
                 <div class="overflow-x-auto">
@@ -64,7 +72,7 @@
                                 <tr>
                                     <td>
                                         <div class="entity-title">{{ $ingredient->name }}</div>
-                                        <div class="entity-meta">{{ $ingredient->brand }}</div>
+                                        <div class="entity-meta">{{ $ingredient->brand ?: 'Sem marca informada' }}</div>
                                     </td>
                                     <td>
                                         {{ $ingredient->purchase_quantity }} {{ strtoupper($ingredient->purchase_unit) }}<br>
