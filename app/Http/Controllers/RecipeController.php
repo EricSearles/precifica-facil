@@ -27,12 +27,17 @@ class RecipeController extends Controller
 
     public function index(Request $request): View
     {
-        $search = trim((string) $request->query('search', ''));
-        $recipes = $this->recipeRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
+        $companyId = (int) $request->user()->company_id;
+        $filters = [
+            'search' => trim((string) $request->query('search', '')),
+            'product_id' => (int) $request->query('product_id', 0),
+        ];
+        $recipes = $this->recipeRepository->getPaginatedByCompany($companyId, $filters);
 
         return view('recipes.index', [
             'recipes' => $recipes,
-            'search' => $search,
+            'filters' => $filters,
+            'products' => $this->productRepository->getByCompany($companyId),
         ]);
     }
 
@@ -51,7 +56,7 @@ class RecipeController extends Controller
 
         return redirect()
             ->route('recipes.show', $recipe->id)
-            ->with('success', 'Receita criada com sucesso. Agora adicione os ingredientes da composicao.');
+            ->with('success', 'Receita criada. Agora adicione ingredientes, custos extras e valide o preço do lote.');
     }
 
     public function show(Request $request, int $recipe): View
@@ -93,7 +98,7 @@ class RecipeController extends Controller
 
         return redirect()
             ->route('recipes.show', $recipeModel->id)
-            ->with('success', 'Receita atualizada com sucesso.');
+            ->with('success', 'Receita atualizada. Revise os itens para manter o custo coerente com a produção.');
     }
 
     public function destroy(Request $request, int $recipe): RedirectResponse
@@ -106,7 +111,21 @@ class RecipeController extends Controller
 
         return redirect()
             ->route('recipes.index')
-            ->with('success', 'Receita removida com sucesso.');
+            ->with('success', 'Receita removida do seu catálogo de produção.');
+    }
+
+    public function duplicate(Request $request, int $recipe): RedirectResponse
+    {
+        $recipeModel = $this->recipeRepository->findWithItems($recipe, (int) $request->user()->company_id);
+
+        abort_if(! $recipeModel, 404);
+
+        $duplicate = $this->recipeCrudService->duplicate($recipeModel);
+        $duplicate = $this->recipeService->recalculateAndUpdate($duplicate->id, (int) $request->user()->company_id) ?? $duplicate;
+
+        return redirect()
+            ->route('recipes.show', $duplicate->id)
+            ->with('success', 'Receita duplicada. Confira ingredientes, custos extras e rendimento antes de usar na venda.');
     }
 
     public function recalculate(Request $request, int $recipe): RedirectResponse|JsonResponse
@@ -135,7 +154,7 @@ class RecipeController extends Controller
 
             return redirect()
                 ->route('recipes.index')
-                ->with('error', 'Receita nao encontrada para a empresa do usuario autenticado.');
+                ->with('error', 'Não foi possível localizar essa receita na empresa atual.');
         }
 
         if ($request->expectsJson()) {
@@ -147,6 +166,6 @@ class RecipeController extends Controller
 
         return redirect()
             ->route('recipes.show', $updatedRecipe->id)
-            ->with('success', 'Receita recalculada com sucesso.');
+            ->with('success', 'Receita recalculada. Os custos e o preço sugerido já refletem os dados mais recentes.');
     }
 }

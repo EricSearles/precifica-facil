@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Product;
+use App\Models\ProductChannelPrice;
+use App\Models\ProductPackaging;
 use App\Repositories\ProductRepository;
 
 class ProductService
@@ -62,6 +64,53 @@ class ProductService
         $this->productRepository->delete($product);
     }
 
+    public function duplicate(Product $product): Product
+    {
+        $duplicate = $this->productRepository->create([
+            'company_id' => $product->company_id,
+            'category_id' => $product->category_id,
+            'name' => $this->duplicateName($product->name),
+            'sale_unit' => $product->sale_unit,
+            'yield_quantity' => $product->yield_quantity,
+            'profit_margin_type' => $product->profit_margin_type,
+            'profit_margin_value' => $product->profit_margin_value,
+            'use_global_margin' => $product->use_global_margin,
+            'calculated_unit_cost' => (float) $product->calculated_unit_cost,
+            'suggested_sale_price' => (float) $product->suggested_sale_price,
+            'notes' => $product->notes,
+            'is_active' => $product->is_active,
+        ]);
+
+        $product->loadMissing('productPackagings', 'productChannelPrices');
+
+        foreach ($product->productPackagings as $packaging) {
+            ProductPackaging::query()->create([
+                'company_id' => $duplicate->company_id,
+                'product_id' => $duplicate->id,
+                'packaging_id' => $packaging->packaging_id,
+                'quantity' => $packaging->quantity,
+                'total_cost' => $packaging->total_cost,
+            ]);
+        }
+
+        foreach ($product->productChannelPrices as $channelPrice) {
+            ProductChannelPrice::query()->create([
+                'company_id' => $duplicate->company_id,
+                'product_id' => $duplicate->id,
+                'sales_channel_id' => $channelPrice->sales_channel_id,
+                'reference_price' => $channelPrice->reference_price,
+                'desired_net_value' => $channelPrice->desired_net_value,
+                'percentage_fee_total' => $channelPrice->percentage_fee_total,
+                'fixed_fee_total' => $channelPrice->fixed_fee_total,
+                'fee_total' => $channelPrice->fee_total,
+                'channel_price' => $channelPrice->channel_price,
+                'net_value' => $channelPrice->net_value,
+            ]);
+        }
+
+        return $duplicate->fresh(['category', 'company.setting', 'productChannelPrices.salesChannel']);
+    }
+
     protected function calculateSuggestedSalePrice(Product $product): float
     {
         $pricingProduct = clone $product;
@@ -76,5 +125,10 @@ class ProductService
             $pricingProduct,
             (float) $product->calculated_unit_cost
         );
+    }
+
+    private function duplicateName(string $name): string
+    {
+        return str($name)->finish('')->append(' (Cópia)')->toString();
     }
 }

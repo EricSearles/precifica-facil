@@ -15,15 +15,19 @@ class IngredientRepository
             ->get();
     }
 
-    public function getPaginatedByCompany(int $companyId, ?string $search = null, ?int $perPage = null): LengthAwarePaginator
+    public function getPaginatedByCompany(int $companyId, array $filters = [], ?int $perPage = null): LengthAwarePaginator
     {
         $perPage ??= (int) config('precificafacil.pagination.per_page', 10);
+        $search = trim((string) ($filters['search'] ?? ''));
+        $status = (string) ($filters['status'] ?? '');
 
         return Ingredient::where('company_id', $companyId)
             ->when($search, fn ($query) => $query->where(function ($subQuery) use ($search) {
                 $subQuery->where('name', 'like', "%{$search}%")
                     ->orWhere('brand', 'like', "%{$search}%");
             }))
+            ->when($status === 'active', fn ($query) => $query->where('is_active', true))
+            ->when($status === 'inactive', fn ($query) => $query->where('is_active', false))
             ->orderBy('name')
             ->paginate($perPage)
             ->withQueryString();

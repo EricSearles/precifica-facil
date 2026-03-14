@@ -10,6 +10,10 @@
             <div class="page-actions">
                 <a href="{{ route('recipes.index') }}" class="button-secondary">Voltar</a>
                 <a href="{{ route('recipes.edit', $recipe->id) }}" class="button-secondary">Editar receita</a>
+                <form method="POST" action="{{ route('recipes.duplicate', $recipe->id) }}">
+                    @csrf
+                    <button type="submit" class="button-secondary">Duplicar receita</button>
+                </form>
                 <form method="POST" action="{{ route('recipes.recalculate', $recipe->id) }}">
                     @csrf
                     <button type="submit" class="button-primary">Recalcular receita</button>

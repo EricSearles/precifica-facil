@@ -16,9 +16,12 @@ class ProductRepository
             ->get();
     }
 
-    public function getPaginatedByCompany(int $companyId, ?string $search = null, ?int $perPage = null): LengthAwarePaginator
+    public function getPaginatedByCompany(int $companyId, array $filters = [], ?int $perPage = null): LengthAwarePaginator
     {
         $perPage ??= (int) config('precificafacil.pagination.per_page', 10);
+        $search = trim((string) ($filters['search'] ?? ''));
+        $status = (string) ($filters['status'] ?? '');
+        $categoryId = (int) ($filters['category_id'] ?? 0);
 
         return Product::with(['category', 'company.setting', 'productChannelPrices.salesChannel'])
             ->where('company_id', $companyId)
@@ -26,6 +29,9 @@ class ProductRepository
                 $subQuery->where('name', 'like', "%{$search}%")
                     ->orWhereHas('category', fn ($categoryQuery) => $categoryQuery->where('name', 'like', "%{$search}%"));
             }))
+            ->when($status === 'active', fn ($query) => $query->where('is_active', true))
+            ->when($status === 'inactive', fn ($query) => $query->where('is_active', false))
+            ->when($categoryId > 0, fn ($query) => $query->where('category_id', $categoryId))
             ->orderBy('name')
             ->paginate($perPage)
             ->withQueryString();

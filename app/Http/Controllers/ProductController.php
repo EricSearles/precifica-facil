@@ -30,12 +30,18 @@ class ProductController extends Controller
 
     public function index(Request $request): View
     {
-        $search = trim((string) $request->query('search', ''));
-        $products = $this->productRepository->getPaginatedByCompany((int) $request->user()->company_id, $search);
+        $companyId = (int) $request->user()->company_id;
+        $filters = [
+            'search' => trim((string) $request->query('search', '')),
+            'status' => (string) $request->query('status', ''),
+            'category_id' => (int) $request->query('category_id', 0),
+        ];
+        $products = $this->productRepository->getPaginatedByCompany($companyId, $filters);
 
         return view('products.index', [
             'products' => $products,
-            'search' => $search,
+            'filters' => $filters,
+            'categories' => $this->categoryRepository->getByCompany($companyId),
         ]);
     }
 
@@ -54,7 +60,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('products.index')
-            ->with('success', 'Produto criado com sucesso.');
+            ->with('success', 'Produto criado. Agora você já pode revisar margem, canais e embalagem.');
     }
 
     public function edit(Request $request, int $product): View
@@ -84,7 +90,7 @@ class ProductController extends Controller
 
         return redirect()
             ->route('products.index')
-            ->with('success', 'Produto atualizado com sucesso.');
+            ->with('success', 'Produto atualizado. O preço sugerido e os canais foram revisados com a nova configuração.');
     }
 
     public function destroy(Request $request, int $product): RedirectResponse
@@ -97,6 +103,19 @@ class ProductController extends Controller
 
         return redirect()
             ->route('products.index')
-            ->with('success', 'Produto removido com sucesso.');
+            ->with('success', 'Produto removido do catálogo da empresa.');
+    }
+
+    public function duplicate(Request $request, int $product): RedirectResponse
+    {
+        $productModel = $this->productRepository->findById($product, (int) $request->user()->company_id);
+
+        abort_if(! $productModel, 404);
+
+        $duplicate = $this->productService->duplicate($productModel);
+
+        return redirect()
+            ->route('products.edit', $duplicate->id)
+            ->with('success', 'Produto duplicado. Revise margem, embalagem e canais antes de publicar.');
     }
 }
