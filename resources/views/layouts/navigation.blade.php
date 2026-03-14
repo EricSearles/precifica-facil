@@ -1,4 +1,6 @@
 @php
+$company = Auth::user()?->company;
+$accessNotice = $company?->accessNotice();
 $navItems = [
 ['label' => 'Dashboard', 'route' => 'dashboard', 'match' => 'dashboard'],
 ['label' => 'Categorias', 'route' => 'categories.index', 'match' => 'categories.*'],
@@ -7,6 +9,7 @@ $navItems = [
 ['label' => 'Canais de venda', 'route' => 'sales-channels.index', 'match' => 'sales-channels.*'],
 ['label' => 'Produtos', 'route' => 'products.index', 'match' => 'products.*'],
 ['label' => 'Receitas', 'route' => 'recipes.index', 'match' => 'recipes.*'],
+['label' => 'Meu plano', 'route' => 'billing.portal', 'match' => 'billing.*'],
 ['label' => 'Configurações', 'route' => 'settings.edit', 'match' => 'settings.*'],
 ];
 @endphp
@@ -18,7 +21,6 @@ $navItems = [
         <div class="flex items-start justify-between gap-3">
             <div class="flex items-start gap-3">
                 <div>
-                    <!-- <div class="brand-badge">Sistema de precificação</div> -->
                     <h1 class="mt-3 text-lg font-semibold text-white">Precifica Fácil</h1>
                     <p class="mt-1 text-sm leading-6" style="color: rgba(229, 231, 235, 0.82);">
                         Gestão simples para doceiras, confeiteiras, salgadeiras e pequenos negócios de alimentação.
@@ -54,20 +56,11 @@ $navItems = [
                 <p class="mt-1 text-sm" style="color: rgba(229,231,235,0.78);">{{ Auth::user()->email }}</p>
             </div>
 
-            @if (Auth::user()->company?->onTrial() || Auth::user()->company?->trialExpired())
-            <div class="mt-4 rounded-2xl border px-3 py-3 text-sm" style="border-color: rgba(255,255,255,0.08); background: rgba(37,99,235,0.16); color: #dbeafe;">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: rgba(219,234,254,0.76);">Período de teste</p>
-                <p class="mt-2 font-semibold text-white">
-                    @if (Auth::user()->company?->onTrial())
-                    {{ Auth::user()->company->trialDaysLeft() }} dia(s) restantes
-                    @else
-                    Encerrado
-                    @endif
-                </p>
-                <p class="mt-1 text-xs leading-5" style="color: rgba(219,234,254,0.82);">
-                    @if (Auth::user()->company?->trial_ends_at)
-                    Válido até {{ Auth::user()->company->trial_ends_at->format('d/m/Y') }}
-                    @endif
+            @if ($accessNotice)
+            <div class="mt-4 rounded-2xl border px-3 py-3 text-sm" style="border-color: rgba(255,255,255,0.08); background: {{ $accessNotice['blocked'] ? 'rgba(127, 29, 29, 0.32)' : 'rgba(37,99,235,0.16)' }}; color: {{ $accessNotice['blocked'] ? '#fee2e2' : '#dbeafe' }};">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: {{ $accessNotice['blocked'] ? 'rgba(254,226,226,0.76)' : 'rgba(219,234,254,0.76)' }};">{{ $accessNotice['label'] }}</p>
+                <p class="mt-2 text-xs leading-5" style="color: {{ $accessNotice['blocked'] ? 'rgba(254,226,226,0.88)' : 'rgba(219,234,254,0.82)' }};">
+                    {{ $accessNotice['message'] }}
                 </p>
             </div>
             @endif
@@ -130,20 +123,11 @@ $navItems = [
                 <p class="mt-1 text-sm" style="color: rgba(229,231,235,0.78);">{{ Auth::user()->email }}</p>
             </div>
 
-            @if (Auth::user()->company?->onTrial() || Auth::user()->company?->trialExpired())
-            <div class="mt-4 rounded-2xl border px-3 py-3 text-sm" style="border-color: rgba(255,255,255,0.08); background: rgba(37,99,235,0.16); color: #dbeafe;">
-                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: rgba(219,234,254,0.76);">Período de teste</p>
-                <p class="mt-2 font-semibold text-white">
-                    @if (Auth::user()->company?->onTrial())
-                    {{ Auth::user()->company->trialDaysLeft() }} dia(s) restantes
-                    @else
-                    Encerrado
-                    @endif
-                </p>
-                <p class="mt-1 text-xs leading-5" style="color: rgba(219,234,254,0.82);">
-                    @if (Auth::user()->company?->trial_ends_at)
-                    Válido até {{ Auth::user()->company->trial_ends_at->format('d/m/Y') }}
-                    @endif
+            @if ($accessNotice)
+            <div class="mt-4 rounded-2xl border px-3 py-3 text-sm" style="border-color: rgba(255,255,255,0.08); background: {{ $accessNotice['blocked'] ? 'rgba(127, 29, 29, 0.32)' : 'rgba(37,99,235,0.16)' }}; color: {{ $accessNotice['blocked'] ? '#fee2e2' : '#dbeafe' }};">
+                <p class="text-[11px] font-semibold uppercase tracking-[0.18em]" style="color: {{ $accessNotice['blocked'] ? 'rgba(254,226,226,0.76)' : 'rgba(219,234,254,0.76)' }};">{{ $accessNotice['label'] }}</p>
+                <p class="mt-2 text-xs leading-5" style="color: {{ $accessNotice['blocked'] ? 'rgba(254,226,226,0.88)' : 'rgba(219,234,254,0.82)' }};">
+                    {{ $accessNotice['message'] }}
                 </p>
             </div>
             @endif

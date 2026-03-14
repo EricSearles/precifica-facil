@@ -4,6 +4,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExtraCostController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\Billing\BillingPortalController;
+use App\Http\Controllers\Billing\BillingInvoiceController;
+use App\Http\Controllers\Billing\BillingWebhookController;
 use App\Http\Controllers\PackagingController;
 use App\Http\Controllers\ProductChannelPriceController;
 use App\Http\Controllers\ProductController;
@@ -27,18 +30,24 @@ Route::redirect('/calculadora-preco-venda', '/calculadora', 301);
 
 Route::view('/termos-de-uso', 'legal.terms')->name('terms');
 Route::view('/uso-de-dados', 'legal.data-usage')->name('data-usage');
-
-Route::get('/dashboard', [DashboardController::class, 'show'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::post('/webhooks/billing/{provider}', [BillingWebhookController::class, 'handle'])->name('billing.webhook');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('/dashboard/quick-price', [DashboardController::class, 'calculate'])->name('dashboard.quick-price');
+    Route::get('/meu-plano', [BillingPortalController::class, 'show'])->name('billing.portal');
+    Route::post('/meu-plano/preparar', [BillingPortalController::class, 'prepare'])->name('billing.prepare');
+    Route::post('/meu-plano/cobrancas', [BillingPortalController::class, 'generateCharge'])->name('billing.charge');
+    Route::post('/meu-plano/alterar-plano', [BillingPortalController::class, 'changePlan'])->name('billing.change-plan');
+    Route::get('/meu-plano/faturas/{billingInvoice}', [BillingInvoiceController::class, 'show'])->name('billing.invoices.show');
+    Route::post('/meu-plano/faturas/{billingInvoice}/processar', [BillingInvoiceController::class, 'process'])->name('billing.invoices.process');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
+Route::middleware(['auth', 'verified', 'company.access'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
+    Route::post('/dashboard/quick-price', [DashboardController::class, 'calculate'])->name('dashboard.quick-price');
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

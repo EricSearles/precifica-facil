@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Billing\Gateway\AsaasGatewayService;
+use App\Services\Billing\Gateway\BillingGatewayInterface;
 use App\Support\CompanyFormatter;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(BillingGatewayInterface::class, AsaasGatewayService::class);
     }
 
     /**
